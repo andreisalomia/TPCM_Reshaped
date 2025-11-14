@@ -1,0 +1,36 @@
+version: '3.8'
+
+networks:
+  tpcm-network:
+    driver: bridge
+
+volumes:
+  oracle-app-data:
+  oracle-clients-data:
+
+services:
+  oracle-app:
+    image: container-registry.oracle.com/database/free:latest
+    container_name: oracle-tpcm-app
+    ports:
+      - "1521:1521"
+    environment:
+      - ORACLE_PWD=matcha123
+      - ORACLE_CHARACTERSET=AL32UTF8
+    volumes:
+      - oracle-app-data:/opt/oracle/oradata
+    networks:
+      - tpcm-network
+
+  oracle-clients:
+    image: container-registry.oracle.com/database/free:latest
+    container_name: oracle-tpcm-clients
+    ports:
+      - "1522:1521"
+    environment:
+      - ORACLE_PWD=matcha123
+      - ORACLE_CHARACTERSET=AL32UTF8
+    volumes:
+      - oracle-clients-data:/opt/oracle/oradata
+    networks:
+      - tpcm-network
