@@ -1,0 +1,32 @@
+2025-11-16 17:07:00 - Starting TpcmSchedulerApplication v1.0 using Java 25.0.1 with PID 3052 (C:\Users\andre\Desktop\TPCM_Reshape\tpcm-scheduler\target\classes started by andre in C:\Users\andre\Desktop\TPCM_Reshape\tpcm-scheduler)
+2025-11-16 17:07:00 - No active profile set, falling back to 1 default profile: "default"
+2025-11-16 17:07:00 - The Class-Path manifest attribute in C:\Users\andre\.m2\repository\com\oracle\database\jdbc\ojdbc11\23.7.0.25.01\ojdbc11-23.7.0.25.01.jar referenced one or more files that do not exist: file:/C:/Users/andre/.m2/repository/com/oracle/database/jdbc/ojdbc11/23.7.0.25.01/oraclepki.jar
+2025-11-16 17:07:00 - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-11-16 17:07:01 - HikariPool-scheduler-app - Starting...
+2025-11-16 17:07:01 - HikariPool-scheduler-app - Added connection oracle.jdbc.driver.T4CConnection@5482897e
+2025-11-16 17:07:01 - HikariPool-scheduler-app - Start completed.
+2025-11-16 17:07:01 - HikariPool-scheduler-clients - Starting...
+2025-11-16 17:07:01 - HikariPool-scheduler-clients - Added connection oracle.jdbc.driver.T4CConnection@2f499a72
+2025-11-16 17:07:01 - HikariPool-scheduler-clients - Start completed.
+2025-11-16 17:07:02 - LiveReload server is running on port 35729
+2025-11-16 17:07:02 - Started TpcmSchedulerApplication in 2.629 seconds (process running for 3.521)
+2025-11-16 17:07:04 - Restarting due to 7 class path changes (7 additions, 0 deletions, 0 modifications)
+2025-11-16 17:07:04 - HikariPool-scheduler-clients - Shutdown initiated...
+2025-11-16 17:07:04 - HikariPool-scheduler-clients - Shutdown completed.
+2025-11-16 17:07:04 - HikariPool-scheduler-app - Shutdown initiated...
+2025-11-16 17:07:04 - HikariPool-scheduler-app - Shutdown completed.
+2025-11-16 17:07:04 - Starting TpcmSchedulerApplication v1.0 using Java 25.0.1 with PID 3052 (C:\Users\andre\Desktop\TPCM_Reshape\tpcm-scheduler\target\classes started by andre in C:\Users\andre\Desktop\TPCM_Reshape\tpcm-scheduler)
+2025-11-16 17:07:04 - No active profile set, falling back to 1 default profile: "default"
+2025-11-16 17:07:04 - HikariPool-scheduler-app - Starting...
+2025-11-16 17:07:05 - HikariPool-scheduler-app - Added connection oracle.jdbc.driver.T4CConnection@7d5c23f6
+2025-11-16 17:07:05 - HikariPool-scheduler-app - Start completed.
+2025-11-16 17:07:05 - HikariPool-scheduler-clients - Starting...
+2025-11-16 17:07:05 - HikariPool-scheduler-clients - Added connection oracle.jdbc.driver.T4CConnection@6b53eccd
+2025-11-16 17:07:05 - HikariPool-scheduler-clients - Start completed.
+2025-11-16 17:07:05 - LiveReload server is running on port 35729
+2025-11-16 17:07:05 - Started TpcmSchedulerApplication in 0.452 seconds (process running for 6.398)
+2025-11-16 17:07:05 - Condition evaluation unchanged
+2025-11-16 17:07:33 - HikariPool-scheduler-clients - Shutdown initiated...
+2025-11-16 17:07:33 - HikariPool-scheduler-clients - Shutdown completed.
+2025-11-16 17:07:33 - HikariPool-scheduler-app - Shutdown initiated...
+2025-11-16 17:07:33 - HikariPool-scheduler-app - Shutdown completed.

@@ -1,5 +1,3 @@
-version: '3.8'
-
 networks:
   tpcm-network:
     driver: bridge
@@ -22,3 +20,19 @@ services:
     networks:
       - tpcm-network
     shm_size: 3g
+  tpcm-scheduler:
+    build:
+      context: ./tpcm-scheduler
+      dockerfile: Dockerfile
+    container_name: tpcm-scheduler
+    ports:
+      - "7000:7000"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    volumes:
+      - ./tpcm-scheduler/logs:/app/logs
+    depends_on:
+      - oracle
+    networks:
+      - tpcm-network
+    restart: unless-stopped
