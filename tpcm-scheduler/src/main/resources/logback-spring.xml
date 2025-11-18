@@ -7,20 +7,23 @@
         </encoder>
     </appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/scheduler.log</file>
+    <appender name="PROCEDURES_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/procedures.log</file>
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} - %msg%n</pattern>
+            <pattern>%msg%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/scheduler-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>logs/procedures-%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
     </appender>
 
+    <logger name="com.example.tpcmscheduler.service.DatabaseScheduler" level="INFO" additivity="false">
+        <appender-ref ref="PROCEDURES_FILE"/>
+    </logger>
+
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="FILE"/>
     </root>
 
 </configuration>
