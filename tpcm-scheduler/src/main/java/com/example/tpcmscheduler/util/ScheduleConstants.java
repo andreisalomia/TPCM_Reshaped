@@ -15,4 +15,7 @@ public class ScheduleConstants {
     public static final String DELETE_OLD_APP_EVENTS_CRON = "0 0 3 * * SUN";
 
     public static final String PARTITION_TRANSACTIONS_CRON = "0 0 23 L * *";
+
+//    test for every 30 seconds
+    public static final String EVERY_30_SECONDS_CRON = "*/30 * * * * *";
 }
