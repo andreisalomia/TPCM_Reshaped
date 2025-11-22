@@ -17,5 +17,9 @@ COPY --from=build /app/target/*.jar app.jar
 
 RUN mkdir -p /app/logs
 
+ENV TZ=Europe/Bucharest
+
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 EXPOSE 7000
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Duser.timezone=Europe/Bucharest", "-jar", "app.jar"]

@@ -7,19 +7,18 @@ volumes:
 
 services:
   oracle:
-    image: container-registry.oracle.com/database/free:latest
+    image: container-registry.oracle.com/database/express:latest
     container_name: oracle-tpcm
     ports:
       - "1521:1521"
       - "5500:5500"
     environment:
-      - ORACLE_PWD=matcha123
-      - ORACLE_CHARACTERSET=AL32UTF8
+    - ORACLE_PWD=matcha123
+    - ORACLE_CHARACTERSET=AL32UTF8
     volumes:
       - oracle-data:/opt/oracle/oradata
     networks:
       - tpcm-network
-    shm_size: 3g
   tpcm-scheduler:
     build:
       context: ./tpcm-scheduler
