@@ -61,6 +61,12 @@ services:
       context: ./tpcm_spring
       dockerfile: Dockerfile
     container_name: tpcm_spring
+    healthcheck:
+      test: ["CMD-SHELL", "busybox wget -q -O - --header 'Authorization: Basic YWRtaW46YWRtaW4=' http://localhost:8080/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 45s
     ports:
       - "8080:8080"
     environment:
@@ -86,8 +92,30 @@ services:
     volumes:
       - ./KafkaConsumerTPCM/logs:/app/logs
     depends_on:
+      oracle:
+        condition: service_started
+      kafka:
+        condition: service_started
+      tpcm-spring:
+        condition: service_healthy
+    networks:
+      - tpcm-network
+    restart: unless-stopped
+
+  voice-simulator:
+    build:
+      context: ./TPCM_Voice_Simulator
+      dockerfile: Dockerfile
+    container_name: voice-simulator
+    ports:
+      - "4242:4242"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    volumes:
+      - ./TPCM_Voice_Simulator/logs:/app/logs
+    depends_on:
       - oracle
-      - kafka
+      - tpcm-spring
     networks:
       - tpcm-network
     restart: unless-stopped

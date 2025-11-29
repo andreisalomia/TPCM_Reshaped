@@ -17,3 +17,6 @@ CREATE TABLE voice_calls (
     call_timestamp TIMESTAMP DEFAULT SYSTIMESTAMP,
     CONSTRAINT fk_called_number FOREIGN KEY (called_number) REFERENCES premium_numbers(phone_number)
 );
+
+CREATE SEQUENCE VOICE_CALLS_SEQ START WITH 1 INCREMENT BY 1;
+SELECT sequence_name FROM user_sequences;

@@ -32,6 +32,12 @@ public class SubscriberControllerApp {
         return ResponseEntity.ok(subscriber);
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<Integer> getSubscriberCountByCustomerId(@RequestParam Long customerId) {
+        int count = subscriberService.countByCustomerId(customerId);
+        return ResponseEntity.ok(count);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Subscriber> updateSubscriber(@PathVariable Long id, @RequestBody Subscriber updated) {
         Subscriber subscriber = subscriberService.updateSubscriber(id, updated);

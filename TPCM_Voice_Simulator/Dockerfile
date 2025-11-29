@@ -13,10 +13,6 @@ RUN ./mvnw clean package -DskipTests
 FROM eclipse-temurin:25-jdk AS runtime
 WORKDIR /app
 
-COPY --from=busybox:1.36 /bin/busybox /bin/busybox
-RUN ln -s /bin/busybox /usr/bin/wget
-RUN ln -s /bin/busybox /usr/bin/curl
-
 COPY --from=build /app/target/*.jar app.jar
 
 RUN mkdir -p /app/logs
@@ -25,5 +21,5 @@ ENV TZ=Europe/Bucharest
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-EXPOSE 8080
+EXPOSE 4242
 ENTRYPOINT ["java", "-Duser.timezone=Europe/Bucharest", "-jar", "app.jar"]

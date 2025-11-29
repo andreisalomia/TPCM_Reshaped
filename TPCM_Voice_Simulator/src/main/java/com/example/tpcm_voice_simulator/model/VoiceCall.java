@@ -15,7 +15,8 @@ import java.time.LocalDateTime;
 public class VoiceCall {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "voice_calls_seq_gen")
+    @SequenceGenerator(name = "voice_calls_seq_gen", sequenceName = "VOICE_CALLS_SEQ", allocationSize = 1)
     private Long id;
 
     @Column(name = "CALLER_NUMBER", nullable = false, length = 20)

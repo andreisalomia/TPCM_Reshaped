@@ -91,6 +91,10 @@ public class SubscriberServiceApp {
                 .orElseThrow(() -> new NotFoundException("Subscriber with ID " + id + " not found"));
     }
 
+    public int countByCustomerId(Long customerId) {
+        return subscriberRepository.countByCustomerCustomerID(customerId);
+    }
+
     @Transactional
     public Subscriber updateSubscriber(Long id, Subscriber updated) {
         Subscriber existing = subscriberRepository.findById(id)

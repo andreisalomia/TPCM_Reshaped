@@ -13,3 +13,11 @@ SIZE 100M
 AUTOEXTEND ON
 NEXT 10M
 MAXSIZE UNLIMITED;
+
+-- Voice Simulator tablespace
+CREATE TABLESPACE tpcm_voice_data
+DATAFILE '/opt/oracle/oradata/XE/XEPDB1/tpcm_voice_data01.dbf'
+SIZE 100M
+AUTOEXTEND ON
+NEXT 10M
+MAXSIZE UNLIMITED;
