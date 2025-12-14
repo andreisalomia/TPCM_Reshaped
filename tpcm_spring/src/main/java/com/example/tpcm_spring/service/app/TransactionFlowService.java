@@ -339,10 +339,20 @@ public class TransactionFlowService {
     }
 
     public Double getAvailableBalance(String msisdn) {
+        if (msisdn == null || msisdn.isBlank()) {
+            cdrLogger.logCdr(CdrOperation.GET_SUBSCRIBER_AVAILABLE_BALANCE, msisdn, 400,
+                    CdrInternalResult.VALIDATION_FAILED,
+                    CdrBuilder.buildGetSubscriberBalanceSection(msisdn, null, null, null, null));
+            throw new ValidationException("MSISDN cannot be null or empty");
+        }
+
         List<Subscriber> subscribers = subscriberRepository.findByMsisdn(msisdn);
         Subscriber subscriber = subscribers.stream().findFirst().orElse(null);
 
         if (subscriber == null || !"ACTIVE".equals(subscriber.getStatus())) {
+            cdrLogger.logCdr(CdrOperation.GET_SUBSCRIBER_AVAILABLE_BALANCE, msisdn, 404,
+                    CdrInternalResult.SUBSCRIBER_NOT_FOUND,
+                    CdrBuilder.buildGetSubscriberBalanceSection(msisdn, null, null, null, null));
             logEvent("BALANCE_CHECK_REJECTED_NO_SUBSCRIBER",
                     subscriber != null ? subscriber.getSubscriberID() : null, null,
                     "Subscriber is not active: " + msisdn);
@@ -353,10 +363,20 @@ public class TransactionFlowService {
 
         Limit limit = limitRepository.findBySubscriberID(subscriber.getSubscriberID());
         if (limit == null) {
+            cdrLogger.logCdr(CdrOperation.GET_SUBSCRIBER_AVAILABLE_BALANCE, msisdn, 404,
+                    CdrInternalResult.GENERIC_ERROR,
+                    CdrBuilder.buildGetSubscriberBalanceSection(msisdn, subscriber.getSubscriberID(), null, null, null));
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Limit not found for subscriber");
         }
 
-        return limit.getMaxAmountCycle() - limit.getConsumedAmount();
+        double available = limit.getMaxAmountCycle() - limit.getConsumedAmount();
+
+        cdrLogger.logCdr(CdrOperation.GET_SUBSCRIBER_AVAILABLE_BALANCE, msisdn, 200,
+                CdrInternalResult.SUCCESS,
+                CdrBuilder.buildGetSubscriberBalanceSection(msisdn, subscriber.getSubscriberID(), available,
+                        limit.getMaxAmountCycle(), limit.getConsumedAmount()));
+
+        return available;
     }
 
     private void logEvent(String eventType, Long subscriberId, Long transactionId, String detail) {

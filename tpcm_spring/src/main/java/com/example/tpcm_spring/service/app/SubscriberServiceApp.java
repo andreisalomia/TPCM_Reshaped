@@ -4,11 +4,18 @@ import com.example.tpcm_spring.exceptions.ConflictException;
 import com.example.tpcm_spring.exceptions.NotFoundException;
 import com.example.tpcm_spring.exceptions.ValidationException;
 import com.example.tpcm_spring.models.app.Customer;
+import com.example.tpcm_spring.models.app.Limit;
 import com.example.tpcm_spring.models.app.Subscriber;
+import com.example.tpcm_spring.models.app.Transaction;
+import com.example.tpcm_spring.models.app.LogEvent;
 import com.example.tpcm_spring.repository.app.CustomerRepositoryApp;
 import com.example.tpcm_spring.repository.app.SubscriberRepositoryApp;
+import com.example.tpcm_spring.repository.app.TransactionRepository;
+import com.example.tpcm_spring.repository.app.LimitRepository;
+import com.example.tpcm_spring.repository.app.LogEventRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +29,9 @@ public class SubscriberServiceApp {
 
     private final SubscriberRepositoryApp subscriberRepository;
     private final CustomerRepositoryApp customerRepository;
+    private final TransactionRepository transactionRepository;
+    private final LimitRepository limitRepository;
+    private final LogEventRepository logEventRepository;
 
     private static final List<String> VALID_STATUSES = Arrays.asList("ACTIVE", "INACTIVE", "SUSPENDED");
     private static final List<String> VALID_SUB_TYPES = Arrays.asList("PREPAID", "POSTPAID", "HYBRID");
@@ -112,8 +122,6 @@ public class SubscriberServiceApp {
         existing.setStatus(updated.getStatus());
         existing.setSubscriptionType(updated.getSubscriptionType());
 
-        // customer update not allowed directly for integrity reasons
-
         Subscriber saved = subscriberRepository.save(existing);
         log.info("Updated subscriber with ID: {}", saved.getSubscriberID());
         return saved;
@@ -125,10 +133,33 @@ public class SubscriberServiceApp {
                 .orElseThrow(() -> new NotFoundException("Subscriber with ID " + id + " not found"));
 
         Long customerId = existing.getCustomer().getCustomerID();
-        subscriberRepository.deleteById(id);
-        updateNrSubscribers(customerId);
+        try {
+            List<LogEvent> subscriberLogs = logEventRepository.findBySubscriber_SubscriberID(id);
+            if (!subscriberLogs.isEmpty()) {
+                log.info("Deleting {} subscriber log events for subscriber ID {}", subscriberLogs.size(), id);
+                logEventRepository.deleteAll(subscriberLogs);
+            }
 
-        log.info("Deleted subscriber with ID: {}", id);
+            List<Transaction> transactions = transactionRepository.findBySubscriber_SubscriberID(id);
+            if (!transactions.isEmpty()) {
+                log.info("Deleting {} transactions for subscriber ID {}", transactions.size(), id);
+                transactionRepository.deleteAll(transactions);
+            }
+
+            Limit limit = limitRepository.findBySubscriberID(id);
+            if (limit != null) {
+                log.info("Deleting limit for subscriber ID {}", id);
+                limitRepository.delete(limit);
+            }
+
+            subscriberRepository.deleteById(id);
+            updateNrSubscribers(customerId);
+
+            log.info("Deleted subscriber with ID: {}", id);
+        } catch (DataIntegrityViolationException ex) {
+            log.warn("Cannot delete subscriber {} due to related records", id, ex);
+            throw new ConflictException("Cannot delete subscriber because related records exist (logs, transactions, or limits)");
+        }
     }
 
     public List<Subscriber> findByMsisdn(String msisdn) {
