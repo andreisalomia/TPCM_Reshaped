@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/app/transactions/flow")
 @RequiredArgsConstructor
@@ -47,17 +49,6 @@ public class TransactionFlowController {
         return ResponseEntity.ok(transaction);
     }
 
-    @GetMapping("/balance/{msisdn}")
-    @Operation(summary = "Get subscriber available balance")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Balance retrieved successfully"),
-            @ApiResponse(responseCode = "404", description = "Subscriber not found")
-    })
-    public ResponseEntity<BalanceResponse> getSubscriberBalance(@PathVariable String msisdn) {
-        Double availableBalance = transactionFlowService.getAvailableBalance(msisdn);
-        return ResponseEntity.ok(new BalanceResponse(msisdn, availableBalance));
-    }
-
     @PutMapping("/cancel/{transactionId}")
     @Operation(summary = "Cancel transaction")
     @ApiResponses({
@@ -67,6 +58,39 @@ public class TransactionFlowController {
     public ResponseEntity<Transaction> cancelTransaction(@PathVariable Long transactionId) {
         Transaction transaction = transactionFlowService.cancelTransaction(transactionId);
         return ResponseEntity.ok(transaction);
+    }
+
+    @GetMapping("/details/{transactionId}")
+    @Operation(summary = "Get transaction details (CDR logged)")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Transaction details retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "Transaction not found")
+    })
+    public ResponseEntity<Transaction> getTransactionDetails(@PathVariable Long transactionId) {
+        Transaction transaction = transactionFlowService.getTransactionDetails(transactionId);
+        return ResponseEntity.ok(transaction);
+    }
+
+    @GetMapping("/msisdn/{msisdn}")
+    @Operation(summary = "Get transactions for MSISDN (CDR logged)")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Transactions retrieved successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid MSISDN format")
+    })
+    public ResponseEntity<List<Transaction>> getTransactionsForMsisdn(@PathVariable String msisdn) {
+        List<Transaction> transactions = transactionFlowService.getTransactionsForMsisdn(msisdn);
+        return ResponseEntity.ok(transactions);
+    }
+
+    @GetMapping("/balance/{msisdn}")
+    @Operation(summary = "Get subscriber available balance")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Balance retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "Subscriber not found")
+    })
+    public ResponseEntity<BalanceResponse> getSubscriberBalance(@PathVariable String msisdn) {
+        Double availableBalance = transactionFlowService.getAvailableBalance(msisdn);
+        return ResponseEntity.ok(new BalanceResponse(msisdn, availableBalance));
     }
 
     @Data
@@ -91,4 +115,3 @@ public class TransactionFlowController {
         private final Double availableBalance;
     }
 }
-

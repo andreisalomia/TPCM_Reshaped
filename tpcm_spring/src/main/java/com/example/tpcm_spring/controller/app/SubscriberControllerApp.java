@@ -46,7 +46,7 @@ public class SubscriberControllerApp {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSubscriber(@PathVariable Long id) {
-        subscriberService.deleteSubscriber(id);  // aruncă NotFoundException dacă nu există
+        subscriberService.deleteSubscriber(id);
         return ResponseEntity.noContent().build();
     }
 
