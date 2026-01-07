@@ -9,6 +9,7 @@ CREATE TABLE Customer (
     contactNumber   VARCHAR2(20),
     address         VARCHAR2(255)    
 );
+ALTER TABLE customer MODIFY (billCycleDay NUMBER(2));
 
 --------------- Subscriber Table ---------------
 CREATE TABLE Subscriber (

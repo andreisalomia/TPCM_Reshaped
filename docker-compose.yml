@@ -7,7 +7,7 @@ volumes:
 
 services:
   oracle:
-    image: container-registry.oracle.com/database/express:latest
+    image: container-registry.oracle.com/database/free:latest-lite
     container_name: oracle-tpcm
     ports:
       - "1521:1521"
@@ -116,6 +116,19 @@ services:
     depends_on:
       - oracle
       - tpcm-spring
+    networks:
+      - tpcm-network
+    restart: unless-stopped
+  tpcm-store:
+    build:
+      context: ./tpcm-store
+      dockerfile: Dockerfile
+    container_name: tpcm-store
+    ports:
+      - "3000:80"
+    depends_on:
+      tpcm-spring:
+        condition: service_healthy
     networks:
       - tpcm-network
     restart: unless-stopped
