@@ -36,6 +36,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().authenticated()
                 )
+                .oauth2Login(oauth2 -> oauth2
+                        .defaultSuccessUrl("/api/auth/google/callback", true)
+                )
                 .httpBasic(httpBasic -> { /*aici ar veni configuratia de entry point */});
 
         return http.build();

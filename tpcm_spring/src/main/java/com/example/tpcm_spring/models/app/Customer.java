@@ -2,6 +2,7 @@ package com.example.tpcm_spring.models.app;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@Schema(name = "CustomerApp")
 @Table(name = "Customer")
 public class Customer {
 
