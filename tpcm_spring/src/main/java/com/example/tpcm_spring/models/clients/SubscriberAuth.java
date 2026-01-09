@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "SubscriberAuth")
+@Table(name = "SUBSCRIBERAUTH")
 public class SubscriberAuth {
 
     @Id
@@ -39,4 +39,7 @@ public class SubscriberAuth {
 
     @Column(name = "LASTLOGIN")
     private LocalDateTime lastLogin;
+
+    @Column(name = "USERROLE", length = 20)
+    private String userRole;
 }

@@ -2,9 +2,9 @@ package com.example.tpcm_spring.auth;
 
 import com.example.tpcm_spring.models.clients.SubscriberAuth;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -18,13 +18,15 @@ public class OAuthController {
 
     private final OAuthService oAuthService;
 
-    @GetMapping("/google/callback")
-    public ResponseEntity<?> googleCallback(OAuth2AuthenticationToken authentication) {
+    @GetMapping("/user")
+    public ResponseEntity<?> getOAuthUser(@AuthenticationPrincipal OAuth2User principal) {
+        if (principal == null) {
+            return ResponseEntity.status(401).body(Map.of("error", "Not authenticated"));
+        }
 
-        Map<String, Object> attributes = authentication.getPrincipal().getAttributes();
-        String providerUserId = (String) attributes.get("sub");
-        String email = (String) attributes.get("email");
-        String displayName = (String) attributes.get("name");
+        String providerUserId = principal.getAttribute("sub");
+        String email = principal.getAttribute("email");
+        String displayName = principal.getAttribute("name");
 
         Optional<SubscriberAuth> existing = oAuthService.findByProviderAndUserId("GOOGLE", providerUserId);
 

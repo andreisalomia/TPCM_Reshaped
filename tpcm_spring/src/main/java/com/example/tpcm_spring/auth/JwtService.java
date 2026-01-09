@@ -19,11 +19,12 @@ public class JwtService {
     @Value("${jwt.expiration}")
     private Long expiration;
 
-    public String generateToken(Long subscriberID, String msisdn, String email, String displayName) {
+    public String generateToken(Long subscriberID, String msisdn, String email, String displayName, String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("msisdn", msisdn);
         claims.put("email", email);
         claims.put("name", displayName);
+        claims.put("role", role);
 
         return Jwts.builder()
                 .setClaims(claims)

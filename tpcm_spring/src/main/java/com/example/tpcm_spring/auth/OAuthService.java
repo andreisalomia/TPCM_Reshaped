@@ -53,11 +53,12 @@ public class OAuthService {
         auth.setProviderUserID(providerUserId);
         auth.setEmail(email);
         auth.setDisplayName(displayName);
+        auth.setUserRole("USER");
         auth.setCreatedAt(LocalDateTime.now());
         auth.setLastLogin(LocalDateTime.now());
         subscriberAuthRepository.save(auth);
 
-        return jwtService.generateToken(subscriber.getSubscriberID(), subscriber.getMsisdn(), email, displayName);
+        return jwtService.generateToken(subscriber.getSubscriberID(), subscriber.getMsisdn(), email, displayName, "USER");
     }
 
     @Transactional
@@ -71,6 +72,6 @@ public class OAuthService {
             throw new RuntimeException("Subscriber is not active");
         }
 
-        return jwtService.generateToken(subscriber.getSubscriberID(), subscriber.getMsisdn(), auth.getEmail(), auth.getDisplayName());
+        return jwtService.generateToken(subscriber.getSubscriberID(), subscriber.getMsisdn(), auth.getEmail(), auth.getDisplayName(), auth.getUserRole());
     }
 }

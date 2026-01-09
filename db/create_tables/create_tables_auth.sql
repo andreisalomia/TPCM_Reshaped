@@ -11,3 +11,7 @@ CREATE TABLE SubscriberAuth (
     CONSTRAINT fk_subauth_subscriber FOREIGN KEY (subscriberID) REFERENCES Subscriber(subscriberID),
     CONSTRAINT uq_provider_user UNIQUE (authProvider, providerUserID)
 );
+
+ALTER TABLE SubscriberAuth ADD (
+    userRole VARCHAR2(20) DEFAULT 'USER'
+);
