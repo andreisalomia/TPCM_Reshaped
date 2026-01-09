@@ -10,7 +10,8 @@ function AuthCallback() {
     
     if (token) {
       localStorage.setItem('tpcm_token', token);
-      navigate('/');
+      
+      window.location.href = '/';
     } else {
       navigate('/login');
     }

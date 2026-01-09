@@ -6,6 +6,10 @@ function LinkMsisdnPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   
+  const [msisdn, setMsisdn] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  
   const providerUserId = searchParams.get('providerUserId');
   const email = searchParams.get('email');
   const displayName = searchParams.get('displayName');
@@ -46,7 +50,8 @@ function LinkMsisdnPage() {
 
             localStorage.setItem("tpcm_token", response.data.token);
 
-            navigate("/");
+            // Force full page reload to trigger App.jsx useEffect
+            window.location.href = "/";
         } catch (err) {
             setError(err.response?.data?.error || "Failed to link MSISDN");
         } finally {
