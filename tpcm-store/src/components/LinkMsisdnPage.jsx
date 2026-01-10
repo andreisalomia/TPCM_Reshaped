@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import axios from "axios";
+import { jwtUtils } from "../utils/jwtUtils";
 
 function LinkMsisdnPage() {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  
-  const [msisdn, setMsisdn] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  
-  const providerUserId = searchParams.get('providerUserId');
-  const email = searchParams.get('email');
-  const displayName = searchParams.get('displayName');
+    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+
+    const [msisdn, setMsisdn] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const providerUserId = searchParams.get("providerUserId");
+    const email = searchParams.get("email");
+    const displayName = searchParams.get("displayName");
 
     const validateMsisdn = (value) => {
         const cleaned = value.replace(/\s+/g, "");
@@ -48,9 +49,8 @@ function LinkMsisdnPage() {
                 }
             );
 
-            localStorage.setItem("tpcm_token", response.data.token);
+            jwtUtils.saveToken(response.data.token);
 
-            // Force full page reload to trigger App.jsx useEffect
             window.location.href = "/";
         } catch (err) {
             setError(err.response?.data?.error || "Failed to link MSISDN");
@@ -59,8 +59,13 @@ function LinkMsisdnPage() {
         }
     };
 
+    useEffect(() => {
+        if (!providerUserId) {
+            navigate("/login", { replace: true });
+        }
+    }, [providerUserId, navigate]);
+
     if (!providerUserId) {
-        navigate("/login");
         return null;
     }
 
@@ -93,53 +98,56 @@ function LinkMsisdnPage() {
                                     style={{ color: "#ff7a00" }}
                                 >
                                     <i className="bi bi-phone me-2"></i>
-                                    Link Your MSISDN
+                                    Link Your Phone Number
                                 </h2>
                                 <p className="text-secondary">
                                     Welcome, {displayName}!
                                 </p>
-                                <p className="text-muted small">{email}</p>
+                                {/* make text gray */}
+                                <p className="text-secondary">
+                                    Please enter your mobile number to complete
+                                    registration
+                                </p>
                             </div>
-
-                            {error && (
-                                <div
-                                    className="alert alert-danger"
-                                    role="alert"
-                                >
-                                    <i className="bi bi-exclamation-triangle me-2"></i>
-                                    {error}
-                                </div>
-                            )}
 
                             <form onSubmit={handleSubmit}>
                                 <div className="mb-4">
-                                    <label className="form-label text-light">
-                                        <i className="bi bi-phone me-2"></i>
-                                        Phone Number (MSISDN)
+                                    <label
+                                        htmlFor="msisdn"
+                                        className="form-label"
+                                        style={{ color: "#ff7a00" }}
+                                    >
+                                        Mobile Number (MSISDN)
                                     </label>
                                     <input
-                                        type="tel"
+                                        type="text"
                                         className="form-control form-control-lg bg-dark text-light border-secondary"
-                                        placeholder="+40744340284"
+                                        id="msisdn"
+                                        placeholder="Enter your phone number"
                                         value={msisdn}
-                                        onChange={(e) => {
-                                            setMsisdn(e.target.value);
-                                            if (error) setError("");
-                                        }}
+                                        onChange={(e) =>
+                                            setMsisdn(e.target.value)
+                                        }
                                         disabled={loading}
-                                        autoFocus
+                                        style={{
+                                            borderColor: error ? "#dc3545" : "",
+                                        }}
                                     />
-                                    <small className="text-secondary">
-                                        Enter your registered mobile number
-                                    </small>
+                                    {error && (
+                                        <div className="text-danger mt-2 small">
+                                            <i className="bi bi-exclamation-circle me-1"></i>
+                                            {error}
+                                        </div>
+                                    )}
                                 </div>
 
                                 <button
                                     type="submit"
-                                    className="btn btn-lg w-100 text-white fw-bold"
+                                    className="btn btn-lg w-100 fw-bold"
                                     style={{
                                         backgroundColor: "#ff7a00",
                                         border: "none",
+                                        color: "#000",
                                     }}
                                     disabled={loading}
                                 >
