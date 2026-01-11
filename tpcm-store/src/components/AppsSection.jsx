@@ -1,18 +1,54 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { getPaginatedGames, getCategories } from "../data/gamesData";
+import {
+    getPaginatedGames,
+    getCategories,
+    getRandomGames,
+} from "../data/gamesData";
 
 function AppsSection() {
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedCategory, setSelectedCategory] = useState("all");
+    const [shuffledGames, setShuffledGames] = useState([]);
     const itemsPerPage = 9;
 
     const categories = getCategories();
-    const { games, totalPages, totalItems } = getPaginatedGames(
-        currentPage,
-        itemsPerPage,
-        selectedCategory
-    );
+
+    useEffect(() => {
+        if (selectedCategory === "all") {
+            const random = getRandomGames(33);
+            setShuffledGames(random);
+        }
+    }, []);
+
+    const getCurrentGames = () => {
+        let games;
+        let totalItems;
+
+        if (selectedCategory === "all" && shuffledGames.length > 0) {
+            games = shuffledGames;
+            totalItems = shuffledGames.length;
+        } else {
+            const result = getPaginatedGames(
+                currentPage,
+                itemsPerPage,
+                selectedCategory
+            );
+            games = result.games;
+            totalItems = result.totalItems;
+        }
+
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+
+        return {
+            games: games.slice(startIndex, endIndex),
+            totalPages: Math.ceil(totalItems / itemsPerPage),
+            totalItems: totalItems,
+        };
+    };
+
+    const { games, totalPages, totalItems } = getCurrentGames();
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -22,6 +58,11 @@ function AppsSection() {
     const handleCategoryChange = (category) => {
         setSelectedCategory(category);
         setCurrentPage(1);
+
+        if (category === "all") {
+            const random = getRandomGames(33);
+            setShuffledGames(random);
+        }
     };
 
     const renderPagination = () => {
@@ -88,8 +129,8 @@ function AppsSection() {
                 </p>
             </div>
 
-            <div className="mb-4 text-center">
-                <div className="btn-group" role="group">
+            <div className="mb-4 d-flex justify-content-between align-items-center flex-wrap">
+                <div className="btn-group mb-2" role="group">
                     {categories.map((category) => (
                         <button
                             key={category}
@@ -115,6 +156,21 @@ function AppsSection() {
                         </button>
                     ))}
                 </div>
+
+                {selectedCategory === "all" && (
+                    <button
+                        className="btn btn-outline-warning mb-2"
+                        onClick={() => {
+                            const random = getRandomGames(33);
+                            setShuffledGames(random);
+                            setCurrentPage(1);
+                        }}
+                        style={{ borderColor: "#ff7a00", color: "#ff7a00" }}
+                    >
+                        <i className="bi bi-shuffle me-2"></i>
+                        Shuffle
+                    </button>
+                )}
             </div>
 
             <div className="row g-4">
@@ -155,6 +211,7 @@ function AppsSection() {
                                     {app.description}
                                 </p>
 
+                                {/* Features */}
                                 {app.features && app.features.length > 0 && (
                                     <div className="mb-3">
                                         {app.features

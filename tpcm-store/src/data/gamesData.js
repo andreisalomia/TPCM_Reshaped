@@ -38,9 +38,11 @@ const Images = {
 const getName = (title) => {
     const key = title
         .toLowerCase()
+        .replace(/'s\b/g, 's')
         .replace(/[^a-z0-9]/g, '_')
-        .replace(/__+/g, '_');
-    
+        .replace(/__+/g, '_')
+        .replace(/^_|_$/g, '');
+
     return Images[key] || "images/games/fallback.jpg";
 };
 
@@ -49,7 +51,7 @@ export const games = [
         id: 1,
         title: "Cyber Assault 2077",
         description: "Futuristic action RPG set in a dystopian megacity. Make choices that matter.",
-        price: 39.99,
+        price: 7.99,
         image: getName("Cyber Assault 2077"),
         category: "action",
         features: ["Open World", "Story-Driven", "4K Support"]
@@ -58,7 +60,7 @@ export const games = [
         id: 2,
         title: "Shadow Warrior Elite",
         description: "Fast-paced ninja combat with stunning visuals and fluid gameplay.",
-        price: 29.99,
+        price: 59.99,
         image: getName("Shadow Warrior Elite"),
         category: "action",
         features: ["Multiplayer", "60 FPS", "Controller Support"]
@@ -67,7 +69,7 @@ export const games = [
         id: 3,
         title: "Apocalypse Survivors",
         description: "Survive in a post-apocalyptic world. Build, craft, and fight to stay alive.",
-        price: 24.99,
+        price: 2.99,
         image: getName("Apocalypse Survivors"),
         category: "action",
         features: ["Co-op Mode", "Crafting System", "Survival"]
@@ -76,7 +78,7 @@ export const games = [
         id: 4,
         title: "Street Racer X",
         description: "High-octane street racing with customizable cars and intense competition.",
-        price: 34.99,
+        price: 3.99,
         image: getName("Street Racer X"),
         category: "racing",
         features: ["Online Racing", "Car Customization", "HDR"]
@@ -85,7 +87,7 @@ export const games = [
         id: 5,
         title: "Dragon's Quest Legacy",
         description: "Epic fantasy RPG with dragons, magic, and legendary quests.",
-        price: 44.99,
+        price: 14.99,
         image: getName("Dragon's Quest Legacy"),
         category: "rpg",
         features: ["100+ Hours", "Character Customization", "Epic Story"]
@@ -94,7 +96,7 @@ export const games = [
         id: 6,
         title: "Mystic Realms Online",
         description: "MMORPG with thousands of players. Build your legend online.",
-        price: 19.99,
+        price: 1.99,
         image: getName("Mystic Realms Online"),
         category: "rpg",
         features: ["MMO", "Guilds", "PvP Arena"]
@@ -103,7 +105,7 @@ export const games = [
         id: 7,
         title: "Dark Dungeon Chronicles",
         description: "Tactical RPG with turn-based combat and deep character progression.",
-        price: 27.99,
+        price: 17.99,
         image: getName("Dark Dungeon Chronicles"),
         category: "rpg",
         features: ["Turn-Based", "Strategy", "Permadeath"]
@@ -112,7 +114,7 @@ export const games = [
         id: 8,
         title: "Wizard's Academy",
         description: "Learn magic, attend classes, and uncover dark secrets in this school RPG.",
-        price: 32.99,
+        price: 3.99,
         image: getName("Wizard's Academy"),
         category: "rpg",
         features: ["Choice-Driven", "Magic System", "Romance Options"]
@@ -121,7 +123,7 @@ export const games = [
         id: 9,
         title: "Empire Builder Pro",
         description: "Build your empire from scratch. Manage resources, armies, and diplomacy.",
-        price: 36.99,
+        price: 6.99,
         image: getName("Empire Builder Pro"),
         category: "strategy",
         features: ["Real-Time Strategy", "Multiplayer", "Mod Support"]
@@ -139,7 +141,7 @@ export const games = [
         id: 11,
         title: "Medieval Tactics",
         description: "Turn-based medieval warfare. Position your troops wisely.",
-        price: 22.99,
+        price: 2.99,
         image: getName("Medieval Tactics"),
         category: "strategy",
         features: ["Turn-Based", "Historical", "Challenging AI"]
@@ -148,7 +150,7 @@ export const games = [
         id: 12,
         title: "City Architect 2025",
         description: "Design and manage your dream city. Balance growth with sustainability.",
-        price: 31.99,
+        price: 8.99,
         image: getName("City Architect 2025"),
         category: "strategy",
         features: ["City Building", "Economics", "Sandbox Mode"]
@@ -157,7 +159,7 @@ export const games = [
         id: 13,
         title: "Lost Island Explorer",
         description: "Explore a mysterious island full of secrets and ancient ruins.",
-        price: 26.99,
+        price: 39.99,
         image: getName("Lost Island Explorer"),
         category: "adventure",
         features: ["Exploration", "Puzzle Solving", "Beautiful Graphics"]
@@ -166,7 +168,7 @@ export const games = [
         id: 14,
         title: "Time Traveler's Paradox",
         description: "Travel through time to prevent a catastrophic future.",
-        price: 33.99,
+        price: 3.99,
         image: getName("Time Traveler's Paradox"),
         category: "adventure",
         features: ["Time Travel", "Multiple Endings", "Narrative-Driven"]
@@ -175,7 +177,7 @@ export const games = [
         id: 15,
         title: "Ocean's Mystery",
         description: "Dive deep into the ocean and discover what lies beneath.",
-        price: 28.99,
+        price: 42.99,
         image: getName("Ocean's Mystery"),
         category: "adventure",
         features: ["Underwater Exploration", "Marine Life", "Relaxing"]
@@ -184,7 +186,7 @@ export const games = [
         id: 16,
         title: "Mountain Peak Challenge",
         description: "Climb the world's highest peaks in this breathtaking adventure.",
-        price: 24.99,
+        price: 1.99,
         image: getName("Mountain Peak Challenge"),
         category: "adventure",
         features: ["Mountain Climbing", "Weather System", "Realistic Physics"]
@@ -193,7 +195,7 @@ export const games = [
         id: 17,
         title: "Mind Bender Pro",
         description: "Challenge your brain with increasingly complex puzzles.",
-        price: 14.99,
+        price: 4.99,
         image: getName("Mind Bender Pro"),
         category: "puzzle",
         features: ["500+ Puzzles", "Daily Challenges", "Leaderboards"]
@@ -211,7 +213,7 @@ export const games = [
         id: 19,
         title: "Logic Gates Academy",
         description: "Learn programming logic through engaging puzzle gameplay.",
-        price: 16.99,
+        price: 26.99,
         image: getName("Logic Gates Academy"),
         category: "puzzle",
         features: ["Educational", "Progressive Difficulty", "Code Learning"]
@@ -229,7 +231,7 @@ export const games = [
         id: 21,
         title: "Soccer Champions 2025",
         description: "The most realistic soccer simulation ever made.",
-        price: 49.99,
+        price: 4.99,
         image: getName("Soccer Champions 2025"),
         category: "sports",
         features: ["Online Leagues", "Career Mode", "Real Teams"]
@@ -238,7 +240,7 @@ export const games = [
         id: 22,
         title: "Basketball Dynasty",
         description: "Build your basketball legacy from rookie to hall of fame.",
-        price: 39.99,
+        price: 3.99,
         image: getName("Basketball Dynasty"),
         category: "sports",
         features: ["Career Mode", "Online Tournaments", "Customization"]
@@ -247,7 +249,7 @@ export const games = [
         id: 23,
         title: "Extreme Snowboarding",
         description: "Perform insane tricks on the world's best slopes.",
-        price: 29.99,
+        price: 2.99,
         image: getName("Extreme Snowboarding"),
         category: "sports",
         features: ["Trick System", "Open Mountains", "Multiplayer"]
@@ -256,7 +258,7 @@ export const games = [
         id: 24,
         title: "Tennis Grand Slam",
         description: "Compete in all four Grand Slam tournaments.",
-        price: 34.99,
+        price: 3.99,
         image: getName("Tennis Grand Slam"),
         category: "sports",
         features: ["Official Tournaments", "Online Ranked", "Motion Capture"]
@@ -265,7 +267,7 @@ export const games = [
         id: 25,
         title: "Nightmare Asylum",
         description: "Survive the night in this terrifying abandoned asylum.",
-        price: 27.99,
+        price: 1.99,
         image: getName("Nightmare Asylum"),
         category: "horror",
         features: ["Psychological Horror", "Atmospheric", "VR Support"]
@@ -274,7 +276,7 @@ export const games = [
         id: 26,
         title: "Zombie Outbreak",
         description: "Fight for survival in a zombie-infested city.",
-        price: 32.99,
+        price: 3.99,
         image: getName("Zombie Outbreak"),
         category: "horror",
         features: ["Co-op Survival", "Weapon Crafting", "Intense Action"]
@@ -283,7 +285,7 @@ export const games = [
         id: 27,
         title: "Ghost Hunter Chronicles",
         description: "Investigate paranormal activities with high-tech ghost hunting equipment.",
-        price: 24.99,
+        price: 1.99,
         image: getName("Ghost Hunter Chronicles"),
         category: "horror",
         features: ["Investigation", "Equipment Upgrade", "Multiplayer"]
@@ -292,7 +294,7 @@ export const games = [
         id: 28,
         title: "Farm Life Simulator",
         description: "Build and manage your dream farm from the ground up.",
-        price: 21.99,
+        price: 0.99,
         image: getName("Farm Life Simulator"),
         category: "simulation",
         features: ["Farming", "Animal Care", "Seasonal Events"]
@@ -301,7 +303,7 @@ export const games = [
         id: 29,
         title: "Flight Simulator Pro",
         description: "Experience realistic flight simulation with detailed aircraft.",
-        price: 54.99,
+        price: 0.99,
         image: getName("Flight Simulator Pro"),
         category: "simulation",
         features: ["Realistic Physics", "World Scenery", "Weather System"]
@@ -310,7 +312,7 @@ export const games = [
         id: 30,
         title: "Restaurant Tycoon",
         description: "Build a restaurant empire from a small diner to a global franchise.",
-        price: 26.99,
+        price: 2.99,
         image: getName("Restaurant Tycoon"),
         category: "simulation",
         features: ["Business Management", "Recipe Creation", "Staff Management"]
@@ -344,7 +346,6 @@ export const games = [
     }
 ];
 
-// Helper functions remain the same
 export const getGamesByCategory = (category) => {
     if (!category || category === 'all') return games;
     return games.filter(game => game.category === category);
@@ -366,4 +367,35 @@ export const getPaginatedGames = (page = 1, itemsPerPage = 9, category = 'all') 
 export const getCategories = () => {
     const categories = [...new Set(games.map(game => game.category))];
     return ['all', ...categories];
+};
+
+const shuffleArray = (array) => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+};
+
+export const getRandomGames = (count = 9) => {
+    return shuffleArray(games).slice(0, count);
+};
+
+export const getPaginatedGamesShuffled = (page = 1, itemsPerPage = 9, category = 'all', shuffle = false) => {
+    let filtered = getGamesByCategory(category);
+
+    if (shuffle) {
+        filtered = shuffleArray(filtered);
+    }
+
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+
+    return {
+        games: filtered.slice(startIndex, endIndex),
+        totalPages: Math.ceil(filtered.length / itemsPerPage),
+        currentPage: page,
+        totalItems: filtered.length
+    };
 };
