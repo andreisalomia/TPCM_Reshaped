@@ -1,13 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import AppsSection from "./AppsSection";
 import EventsSection from "./EventsSection";
 import ReportingTab from "./ReportingTab";
 import ChatbotAdmin from "./ChatbotAdmin";
+import VoiceCallsTab from "./VoiceCallsTab";
 import Navbar from "./Navbar";
 
 function Dashboard({ user, onLogout }) {
-    const [activeTab, setActiveTab] = useState("apps");
+    const [activeTab, setActiveTab] = useState(() => {
+        return localStorage.getItem("activeTab") || "apps";
+    });
+
+    useEffect(() => {
+        localStorage.setItem("activeTab", activeTab);
+    }, [activeTab]);
 
     console.log(user);
 
@@ -61,6 +68,26 @@ function Dashboard({ user, onLogout }) {
                         >
                             <i className="bi bi-calendar-event me-2"></i>
                             Events & Tickets
+                        </button>
+                        <button
+                            type="button"
+                            className={`btn btn-lg px-4 py-3 ${
+                                activeTab === "voice-calls" ? "active" : ""
+                            }`}
+                            style={{
+                                backgroundColor:
+                                    activeTab === "voice-calls"
+                                        ? "#ff7a00"
+                                        : "#6c757d",
+                                border: "none",
+                                color: activeTab === "voice-calls" ? "#000" : "#fff",
+                                fontWeight: "600",
+                                transition: "all 0.3s ease",
+                            }}
+                            onClick={() => setActiveTab("voice-calls")}
+                        >
+                            <i className="bi bi-telephone-fill me-2"></i>
+                            Voice Calls
                         </button>
                         <button
                             type="button"
@@ -120,6 +147,7 @@ function Dashboard({ user, onLogout }) {
                 >
                     {activeTab === "apps" && <AppsSection />}
                     {activeTab === "events" && <EventsSection />}
+                    {activeTab === "voice-calls" && <VoiceCallsTab user={user} />}
                     {activeTab === "reporting" && (
                         <>
                             {console.log("Passing user to ReportingTab:", user)}
