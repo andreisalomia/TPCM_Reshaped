@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { transactionApi } from "../services/tpcmApi";
-import { games } from "../data/gamesData";
-import { events } from "../data/eventsData";
-import Navbar from "./Navbar";
-import PurchaseModal from "./PurchaseModal";
+import React, { useState, useEffect, useCallback } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { transactionApi } from '../services/tpcmApi';
+import { games } from '../data/gamesData';
+import { events } from '../data/eventsData';
+import Navbar from './Navbar';
+import PurchaseModal from './PurchaseModal';
 
 function CardDetailPage({ user, type }) {
     const { id } = useParams();
@@ -23,8 +23,8 @@ function CardDetailPage({ user, type }) {
             const balanceData = await transactionApi.getBalance(user.msisdn);
             setBalance(balanceData.availableBalance);
         } catch (error) {
-            console.error("Error fetching balance:", error);
-            setBalanceError(error.message || "Failed to fetch balance");
+            console.error('Error fetching balance:', error);
+            setBalanceError(error.message || 'Failed to fetch balance');
             setBalance(0);
         }
     }, [user.msisdn]);
@@ -32,11 +32,11 @@ function CardDetailPage({ user, type }) {
     useEffect(() => {
         setLoading(true);
 
-        const items = type === "app" ? games : events;
+        const items = type === 'app' ? games : events;
         const foundItem = items.find((item) => item.id === parseInt(id));
 
         if (!foundItem) {
-            navigate("/");
+            navigate('/');
             return;
         }
 
@@ -51,18 +51,11 @@ function CardDetailPage({ user, type }) {
 
     if (loading) {
         return (
-            <div className="min-vh-100" style={{ backgroundColor: "#f8f9fa" }}>
-                <Navbar user={user} onLogout={() => navigate("/")} />
-                <div
-                    className="d-flex justify-content-center align-items-center"
-                    style={{ minHeight: "60vh" }}
-                >
+            <div className="min-vh-100" style={{ backgroundColor: '#f8f9fa' }}>
+                <Navbar user={user} onLogout={() => navigate('/')} />
+                <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
                     <div className="text-center">
-                        <div
-                            className="spinner-border text-warning"
-                            role="status"
-                            style={{ width: "3rem", height: "3rem" }}
-                        >
+                        <div className="spinner-border text-warning" role="status" style={{ width: '3rem', height: '3rem' }}>
                             <span className="visually-hidden">Loading...</span>
                         </div>
                         <p className="text-muted mt-3">Loading details...</p>
@@ -75,20 +68,13 @@ function CardDetailPage({ user, type }) {
     if (!item) return null;
 
     return (
-        <div className="min-vh-100" style={{ backgroundColor: "#f8f9fa" }}>
-            <Navbar user={user} onLogout={() => navigate("/")} />
+        <div className="min-vh-100" style={{ backgroundColor: '#f8f9fa' }}>
+            <Navbar user={user} onLogout={() => navigate('/')} />
 
             <div className="container mt-4">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                >
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
                     {/* Back button */}
-                    <button
-                        className="btn btn-outline-secondary mb-4"
-                        onClick={() => navigate("/")}
-                    >
+                    <button className="btn btn-outline-secondary mb-4" onClick={() => navigate('/')}>
                         <i className="bi bi-arrow-left me-2"></i>
                         Back to Store
                     </button>
@@ -98,8 +84,8 @@ function CardDetailPage({ user, type }) {
                             <div
                                 className="card border-0 shadow-sm"
                                 style={{
-                                    backgroundColor: "#212529",
-                                    borderRadius: "15px",
+                                    backgroundColor: '#212529',
+                                    borderRadius: '15px',
                                 }}
                             >
                                 <div className="card-body p-0">
@@ -108,10 +94,10 @@ function CardDetailPage({ user, type }) {
                                         alt={item.title}
                                         className="card-img-top"
                                         style={{
-                                            borderRadius: "15px",
-                                            objectFit: "cover",
-                                            width: "100%",
-                                            maxHeight: "500px",
+                                            borderRadius: '15px',
+                                            objectFit: 'cover',
+                                            width: '100%',
+                                            maxHeight: '500px',
                                         }}
                                     />
                                 </div>
@@ -119,62 +105,40 @@ function CardDetailPage({ user, type }) {
                         </div>
 
                         <div className="col-md-6">
-                            <div
-                                className="card border-0 shadow-sm"
-                                style={{ borderRadius: "15px" }}
-                            >
+                            <div className="card border-0 shadow-sm" style={{ borderRadius: '15px' }}>
                                 <div className="card-body p-4">
-                                    <h1 className="card-title fw-bold">
-                                        {item.title}
-                                    </h1>
-                                    <p className="text-muted mb-4">
-                                        {item.description}
-                                    </p>
+                                    <h1 className="card-title fw-bold">{item.title}</h1>
+                                    <p className="text-muted mb-4">{item.description}</p>
 
                                     {/* Category Badge */}
                                     {item.category && (
-                                        <span
-                                            className="badge bg-secondary mb-3"
-                                            style={{ fontSize: "0.9rem" }}
-                                        >
-                                            {item.category
-                                                .charAt(0)
-                                                .toUpperCase() +
-                                                item.category.slice(1)}
+                                        <span className="badge bg-secondary mb-3" style={{ fontSize: '0.9rem' }}>
+                                            {item.category.charAt(0).toUpperCase() + item.category.slice(1)}
                                         </span>
                                     )}
 
                                     {/* Features */}
                                     <h5 className="fw-bold mb-3">Features:</h5>
                                     <ul className="list-unstyled">
-                                        {item.features?.map(
-                                            (feature, index) => (
-                                                <li
-                                                    key={index}
-                                                    className="mb-2"
-                                                >
-                                                    <i className="bi bi-check-circle-fill text-success me-2"></i>
-                                                    {feature}
-                                                </li>
-                                            )
-                                        )}
+                                        {item.features?.map((feature, index) => (
+                                            <li key={index} className="mb-2">
+                                                <i className="bi bi-check-circle-fill text-success me-2"></i>
+                                                {feature}
+                                            </li>
+                                        ))}
                                     </ul>
 
                                     {/* Event details */}
-                                    {type === "event" && (
+                                    {type === 'event' && (
                                         <div className="mb-4">
-                                            <h5 className="fw-bold mb-3">
-                                                Event Details:
-                                            </h5>
+                                            <h5 className="fw-bold mb-3">Event Details:</h5>
                                             <p>
                                                 <i className="bi bi-calendar3 me-2"></i>
-                                                {new Date(
-                                                    item.date
-                                                ).toLocaleDateString("en-US", {
-                                                    weekday: "long",
-                                                    year: "numeric",
-                                                    month: "long",
-                                                    day: "numeric",
+                                                {new Date(item.date).toLocaleDateString('en-US', {
+                                                    weekday: 'long',
+                                                    year: 'numeric',
+                                                    month: 'long',
+                                                    day: 'numeric',
                                                 })}
                                             </p>
                                             <p>
@@ -187,87 +151,49 @@ function CardDetailPage({ user, type }) {
                                     {/* Balance */}
                                     <div className="mb-4">
                                         {balanceError ? (
-                                            <div
-                                                className="alert alert-warning"
-                                                role="alert"
-                                            >
+                                            <div className="alert alert-warning" role="alert">
                                                 <i className="bi bi-exclamation-triangle me-2"></i>
                                                 Could not load balance
                                             </div>
                                         ) : balance !== null ? (
-                                            <div
-                                                className="alert alert-info"
-                                                role="alert"
-                                            >
+                                            <div className="alert alert-info" role="alert">
                                                 <i className="bi bi-wallet2 me-2"></i>
-                                                Your Balance:{" "}
-                                                <strong>
-                                                    ${balance.toFixed(2)}
-                                                </strong>
+                                                Your Balance: <strong>${balance.toFixed(2)}</strong>
                                             </div>
                                         ) : (
                                             <div className="d-flex align-items-center">
-                                                <div
-                                                    className="spinner-border spinner-border-sm text-warning me-2"
-                                                    role="status"
-                                                >
-                                                    <span className="visually-hidden">
-                                                        Loading balance...
-                                                    </span>
+                                                <div className="spinner-border spinner-border-sm text-warning me-2" role="status">
+                                                    <span className="visually-hidden">Loading balance...</span>
                                                 </div>
-                                                <small className="text-muted">
-                                                    Loading balance...
-                                                </small>
+                                                <small className="text-muted">Loading balance...</small>
                                             </div>
                                         )}
                                     </div>
 
                                     {/* Price and Purchase */}
                                     <div className="d-flex justify-content-between align-items-center mb-3">
-                                        <h2 className="text-warning fw-bold mb-0">
-                                            {item.price === 0
-                                                ? "FREE"
-                                                : `$${item.price}`}
-                                        </h2>
+                                        <h2 className="text-warning fw-bold mb-0">{item.price === 0 ? 'FREE' : `$${item.price}`}</h2>
                                         <button
                                             className="btn btn-lg"
                                             style={{
-                                                backgroundColor: "#ff7a00",
-                                                color: "#000",
-                                                fontWeight: "600",
+                                                backgroundColor: '#ff7a00',
+                                                color: '#000',
+                                                fontWeight: '600',
                                             }}
                                             onClick={handlePurchase}
-                                            disabled={
-                                                item.price > 0 &&
-                                                (balance === null ||
-                                                    balance < item.price)
-                                            }
+                                            disabled={item.price > 0 && (balance === null || balance < item.price)}
                                         >
                                             <i className="bi bi-cart-plus me-2"></i>
-                                            {item.price === 0
-                                                ? "Get Now"
-                                                : balance !== null &&
-                                                  balance < item.price
-                                                ? "Insufficient Balance"
-                                                : "Purchase Now"}
+                                            {item.price === 0 ? 'Get Now' : balance !== null && balance < item.price ? 'Insufficient Balance' : 'Purchase Now'}
                                         </button>
                                     </div>
 
-                                    {balance !== null &&
-                                        item.price > 0 &&
-                                        balance < item.price && (
-                                            <div
-                                                className="alert alert-warning"
-                                                role="alert"
-                                            >
-                                                <i className="bi bi-exclamation-circle me-2"></i>
-                                                You need $
-                                                {(item.price - balance).toFixed(
-                                                    2
-                                                )}{" "}
-                                                more to purchase this item.
-                                            </div>
-                                        )}
+                                    {balance !== null && item.price > 0 && balance < item.price && (
+                                        <div className="alert alert-warning" role="alert">
+                                            <i className="bi bi-exclamation-circle me-2"></i>
+                                            You need ${(item.price - balance).toFixed(2)} more to purchase this item.
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>

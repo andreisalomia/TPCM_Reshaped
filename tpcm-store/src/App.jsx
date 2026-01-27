@@ -1,18 +1,13 @@
-import React, { useState, useEffect } from "react";
-import {
-    BrowserRouter as Router,
-    Routes,
-    Route,
-    Navigate,
-} from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-import LoginPage from "./components/LoginPage";
-import AuthCallback from "./components/AuthCallback";
-import Dashboard from "./components/Dashboard";
-import CardDetailPage from "./components/CardDetailPage";
-import LinkMsisdnPage from "./components/LinkMsisdnPage";
-import { jwtUtils } from "./utils/jwtUtils";
+import LoginPage from './components/LoginPage';
+import AuthCallback from './components/AuthCallback';
+import Dashboard from './components/Dashboard';
+import CardDetailPage from './components/CardDetailPage';
+import LinkMsisdnPage from './components/LinkMsisdnPage';
+import { jwtUtils } from './utils/jwtUtils';
 
 function App() {
     const [user, setUser] = useState(null);
@@ -36,7 +31,7 @@ function App() {
         const checkTokenExpiration = () => {
             const currentUser = jwtUtils.getUserFromToken();
             if (!currentUser) {
-                console.log("Token expired, logging out");
+                console.log('Token expired, logging out');
                 handleLogout();
             }
         };
@@ -63,42 +58,12 @@ function App() {
     return (
         <Router>
             <Routes>
-                <Route
-                    path="/login"
-                    element={user ? <Navigate to="/" /> : <LoginPage />}
-                />
+                <Route path="/login" element={user ? <Navigate to="/" /> : <LoginPage />} />
                 <Route path="/auth/callback" element={<AuthCallback />} />
 
-                <Route
-                    path="/"
-                    element={
-                        user ? (
-                            <Dashboard user={user} onLogout={handleLogout} />
-                        ) : (
-                            <Navigate to="/login" />
-                        )
-                    }
-                />
-                <Route
-                    path="/app/:id"
-                    element={
-                        user ? (
-                            <CardDetailPage user={user} type="app" />
-                        ) : (
-                            <Navigate to="/login" />
-                        )
-                    }
-                />
-                <Route
-                    path="/event/:id"
-                    element={
-                        user ? (
-                            <CardDetailPage user={user} type="event" />
-                        ) : (
-                            <Navigate to="/login" />
-                        )
-                    }
-                />
+                <Route path="/" element={user ? <Dashboard user={user} onLogout={handleLogout} /> : <Navigate to="/login" />} />
+                <Route path="/app/:id" element={user ? <CardDetailPage user={user} type="app" /> : <Navigate to="/login" />} />
+                <Route path="/event/:id" element={user ? <CardDetailPage user={user} type="event" /> : <Navigate to="/login" />} />
                 <Route path="/link-msisdn" element={<LinkMsisdnPage />} />
 
                 <Route path="*" element={<Navigate to="/" replace />} />

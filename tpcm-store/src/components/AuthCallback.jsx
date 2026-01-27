@@ -1,25 +1,25 @@
-import React, { useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { jwtUtils } from "../utils/jwtUtils";
+import React, { useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { jwtUtils } from '../utils/jwtUtils';
 
 function AuthCallback() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
 
     useEffect(() => {
-        const token = searchParams.get("token");
+        const token = searchParams.get('token');
 
         if (token) {
             if (!jwtUtils.isTokenExpired(token)) {
                 jwtUtils.saveToken(token);
 
-                window.location.href = "/";
+                window.location.href = '/';
             } else {
-                console.error("Received expired token");
-                navigate("/login", { replace: true });
+                console.error('Received expired token');
+                navigate('/login', { replace: true });
             }
         } else {
-            navigate("/login", { replace: true });
+            navigate('/login', { replace: true });
         }
     }, [searchParams, navigate]);
 

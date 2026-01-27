@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
-import { voiceCallsApi } from "../services/voiceSimulatorApi";
+import React, { useState, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
+import { voiceCallsApi } from '../services/voiceSimulatorApi';
 
 function VoiceCallsTab({ user }) {
     const [premiumNumbers, setPremiumNumbers] = useState([]);
-    const [selectedPremiumNumber, setSelectedPremiumNumber] = useState("");
+    const [selectedPremiumNumber, setSelectedPremiumNumber] = useState('');
     const [durationSeconds, setDurationSeconds] = useState(60);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
+    const [error, setError] = useState('');
     const [activeCall, setActiveCall] = useState(null);
     const [callHistory, setCallHistory] = useState([]);
     const [elapsedTime, setElapsedTime] = useState(0);
-    const [currentPhase, setCurrentPhase] = useState("");
+    const [currentPhase, setCurrentPhase] = useState('');
     const timerRef = useRef(null);
 
     useEffect(() => {
@@ -37,7 +37,7 @@ function VoiceCallsTab({ user }) {
 
             setActiveCall(null);
             setElapsedTime(0);
-            setCurrentPhase("");
+            setCurrentPhase('');
 
             loadCallHistory();
         }
@@ -51,7 +51,7 @@ function VoiceCallsTab({ user }) {
                 setSelectedPremiumNumber(numbers[0].phoneNumber);
             }
         } catch (err) {
-            console.error("Error loading premium numbers:", err);
+            console.error('Error loading premium numbers:', err);
         }
     };
 
@@ -60,14 +60,11 @@ function VoiceCallsTab({ user }) {
             const calls = await voiceCallsApi.getAllCalls();
             const sortedCalls = calls
                 .filter((call) => call.callerNumber === user.msisdn)
-                .sort(
-                    (a, b) =>
-                        new Date(b.callTimestamp) - new Date(a.callTimestamp),
-                )
+                .sort((a, b) => new Date(b.callTimestamp) - new Date(a.callTimestamp))
                 .slice(0, 5);
             setCallHistory(sortedCalls);
         } catch (err) {
-            console.error("Error loading call history:", err);
+            console.error('Error loading call history:', err);
         }
     };
 
@@ -86,17 +83,13 @@ function VoiceCallsTab({ user }) {
 
     const handleStartCall = async (e) => {
         e.preventDefault();
-        setError("");
+        setError('');
         setLoading(true);
 
         try {
-            const response = await voiceCallsApi.startCall(
-                user.msisdn,
-                selectedPremiumNumber,
-                durationSeconds,
-            );
+            const response = await voiceCallsApi.startCall(user.msisdn, selectedPremiumNumber, durationSeconds);
 
-            if (response.status === "ACCEPTED") {
+            if (response.status === 'ACCEPTED') {
                 setActiveCall({
                     callId: response.callId,
                     premiumNumber: selectedPremiumNumber,
@@ -105,24 +98,21 @@ function VoiceCallsTab({ user }) {
                 });
                 setElapsedTime(0);
 
-                const premiumConfig = premiumNumbers.find(
-                    (num) => num.phoneNumber === selectedPremiumNumber,
-                );
+                const premiumConfig = premiumNumbers.find((num) => num.phoneNumber === selectedPremiumNumber);
 
                 if (premiumConfig?.duration1 > 0) {
-                    const isFree =
-                        !premiumConfig.cost1 || premiumConfig.cost1 === 0;
-                    setCurrentPhase(isFree ? "Free Phase" : "Phase 1 (Paid)");
+                    const isFree = !premiumConfig.cost1 || premiumConfig.cost1 === 0;
+                    setCurrentPhase(isFree ? 'Free Phase' : 'Phase 1 (Paid)');
                 } else if (premiumConfig?.duration2 > 0) {
-                    setCurrentPhase("Phase 2 (Indivisible)");
+                    setCurrentPhase('Phase 2 (Indivisible)');
                 } else {
-                    setCurrentPhase("Unknown Phase");
+                    setCurrentPhase('Unknown Phase');
                 }
             } else {
-                setError(response.message || "Failed to start call");
+                setError(response.message || 'Failed to start call');
             }
         } catch (err) {
-            setError(err.response?.data?.message || "Error starting call");
+            setError(err.response?.data?.message || 'Error starting call');
         } finally {
             setLoading(false);
         }
@@ -131,17 +121,15 @@ function VoiceCallsTab({ user }) {
     const formatDuration = (seconds) => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
-        return `${mins}:${secs.toString().padStart(2, "0")}`;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
     const formatTimestamp = (timestamp) => {
-        return new Date(timestamp).toLocaleString("ro-RO");
+        return new Date(timestamp).toLocaleString('ro-RO');
     };
 
     const getSelectedPremiumConfig = () => {
-        return premiumNumbers.find(
-            (num) => num.phoneNumber === selectedPremiumNumber,
-        );
+        return premiumNumbers.find((num) => num.phoneNumber === selectedPremiumNumber);
     };
 
     const calculateEstimatedCost = () => {
@@ -190,31 +178,22 @@ function VoiceCallsTab({ user }) {
         if (elapsedTime < config.duration1) {
             const isFree = !config.cost1 || config.cost1 === 0;
             return {
-                name: isFree ? "Free Phase" : "Phase 1",
-                color: isFree ? "success" : "warning",
-                description: isFree
-                    ? `${config.duration1}s free calling`
-                    : `${config.cost1} EUR for ${config.duration1}s`,
+                name: isFree ? 'Free Phase' : 'Phase 1',
+                color: isFree ? 'success' : 'warning',
+                description: isFree ? `${config.duration1}s free calling` : `${config.cost1} EUR for ${config.duration1}s`,
             };
-        }
-        else if (
-            elapsedTime < config.duration1 + config.duration2 &&
-            config.duration2 > 0
-        ) {
+        } else if (elapsedTime < config.duration1 + config.duration2 && config.duration2 > 0) {
             return {
-                name: "Phase 2 (Indivisible)",
-                color: "warning",
+                name: 'Phase 2 (Indivisible)',
+                color: 'warning',
                 description: `${config.cost2} EUR for ${config.duration2}s`,
             };
-        }
-        else {
+        } else {
             const hasPhase3 = config.cost3 && config.duration3;
             return {
-                name: hasPhase3 ? "Phase 3 (Divisible)" : "Phase 2 (Repeating)",
-                color: "danger",
-                description: hasPhase3
-                    ? `${config.cost3} EUR per ${config.duration3}s segment`
-                    : `Repeating ${config.cost2} EUR per ${config.duration2}s`,
+                name: hasPhase3 ? 'Phase 3 (Divisible)' : 'Phase 2 (Repeating)',
+                color: 'danger',
+                description: hasPhase3 ? `${config.cost3} EUR per ${config.duration3}s segment` : `Repeating ${config.cost2} EUR per ${config.duration2}s`,
             };
         }
     };
@@ -223,31 +202,19 @@ function VoiceCallsTab({ user }) {
 
     return (
         <div className="container mt-4">
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-            >
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
                 <div className="text-center mb-4">
-                    <h2 className="fw-bold" style={{ color: "#212529" }}>
-                        <i
-                            className="bi bi-telephone-fill me-2"
-                            style={{ color: "#ff7a00" }}
-                        ></i>
+                    <h2 className="fw-bold" style={{ color: '#212529' }}>
+                        <i className="bi bi-telephone-fill me-2" style={{ color: '#ff7a00' }}></i>
                         Voice Call Simulator
                     </h2>
-                    <p className="text-muted">
-                        Simulate premium rate calls in real-time
-                    </p>
+                    <p className="text-muted">Simulate premium rate calls in real-time</p>
                 </div>
 
                 <div className="row g-4">
                     <div className="col-lg-6">
                         <div className="card shadow-sm h-100">
-                            <div
-                                className="card-header text-white"
-                                style={{ backgroundColor: "#ff7a00" }}
-                            >
+                            <div className="card-header text-white" style={{ backgroundColor: '#ff7a00' }}>
                                 <h5 className="mb-0">
                                     <i className="bi bi-play-circle-fill me-2"></i>
                                     Start New Call
@@ -255,10 +222,7 @@ function VoiceCallsTab({ user }) {
                             </div>
                             <div className="card-body">
                                 {error && (
-                                    <div
-                                        className="alert alert-danger"
-                                        role="alert"
-                                    >
+                                    <div className="alert alert-danger" role="alert">
                                         <i className="bi bi-exclamation-triangle-fill me-2"></i>
                                         {error}
                                     </div>
@@ -270,12 +234,7 @@ function VoiceCallsTab({ user }) {
                                             <i className="bi bi-person-circle me-2"></i>
                                             Caller Number
                                         </label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            value={user.msisdn}
-                                            disabled
-                                        />
+                                        <input type="text" className="form-control" value={user.msisdn} disabled />
                                     </div>
 
                                     <div className="mb-3">
@@ -283,21 +242,9 @@ function VoiceCallsTab({ user }) {
                                             <i className="bi bi-hash me-2"></i>
                                             Premium Number
                                         </label>
-                                        <select
-                                            className="form-select"
-                                            value={selectedPremiumNumber}
-                                            onChange={(e) =>
-                                                setSelectedPremiumNumber(
-                                                    e.target.value,
-                                                )
-                                            }
-                                            disabled={activeCall || loading}
-                                        >
+                                        <select className="form-select" value={selectedPremiumNumber} onChange={(e) => setSelectedPremiumNumber(e.target.value)} disabled={activeCall || loading}>
                                             {premiumNumbers.map((num) => (
-                                                <option
-                                                    key={num.phoneNumber}
-                                                    value={num.phoneNumber}
-                                                >
+                                                <option key={num.phoneNumber} value={num.phoneNumber}>
                                                     {num.phoneNumber}
                                                 </option>
                                             ))}
@@ -315,17 +262,10 @@ function VoiceCallsTab({ user }) {
                                             min="1"
                                             max="300"
                                             value={durationSeconds}
-                                            onChange={(e) =>
-                                                setDurationSeconds(
-                                                    parseInt(e.target.value),
-                                                )
-                                            }
+                                            onChange={(e) => setDurationSeconds(parseInt(e.target.value))}
                                             disabled={activeCall || loading}
                                         />
-                                        <small className="text-muted">
-                                            Duration:{" "}
-                                            {formatDuration(durationSeconds)}
-                                        </small>
+                                        <small className="text-muted">Duration: {formatDuration(durationSeconds)}</small>
                                     </div>
 
                                     {getSelectedPremiumConfig() && (
@@ -334,76 +274,37 @@ function VoiceCallsTab({ user }) {
                                                 <div className="card-body py-2">
                                                     <h6 className="mb-2">
                                                         <i className="bi bi-info-circle-fill me-2 text-primary"></i>
-                                                        Premium Number
-                                                        Configuration
+                                                        Premium Number Configuration
                                                     </h6>
                                                     <div className="row g-2">
                                                         <div className="col-4">
                                                             <small className="text-muted d-block">
-                                                                Phase 1{" "}
-                                                                {!getSelectedPremiumConfig()
-                                                                    .cost1 ||
-                                                                getSelectedPremiumConfig()
-                                                                    .cost1 === 0
-                                                                    ? "(Free)"
-                                                                    : ""}
+                                                                Phase 1 {!getSelectedPremiumConfig().cost1 || getSelectedPremiumConfig().cost1 === 0 ? '(Free)' : ''}
                                                             </small>
                                                             <strong>
-                                                                {
-                                                                    getSelectedPremiumConfig()
-                                                                        .duration1
-                                                                }
-                                                                s
-                                                                {getSelectedPremiumConfig()
-                                                                    .cost1 &&
-                                                                getSelectedPremiumConfig()
-                                                                    .cost1 > 0
-                                                                    ? ` / ${getSelectedPremiumConfig().cost1}€`
-                                                                    : ""}
+                                                                {getSelectedPremiumConfig().cost1 && getSelectedPremiumConfig().cost1 > 0 ? `${getSelectedPremiumConfig().cost1}€ / ` : ''}
+                                                                {getSelectedPremiumConfig().duration1}s
                                                             </strong>
                                                         </div>
                                                         <div className="col-4">
-                                                            <small className="text-muted d-block">
-                                                                Phase 2
-                                                            </small>
+                                                            <small className="text-muted d-block">Phase 2</small>
                                                             <strong>
-                                                                {
-                                                                    getSelectedPremiumConfig()
-                                                                        .duration2
-                                                                }
-                                                                s{" / "}
-                                                                {
-                                                                    getSelectedPremiumConfig()
-                                                                        .cost2
-                                                                }
-                                                                €
+                                                                {getSelectedPremiumConfig().cost2}s{' / '}
+                                                                {getSelectedPremiumConfig().duration2}€
                                                             </strong>
                                                         </div>
                                                         <div className="col-4">
-                                                            <small className="text-muted d-block">
-                                                                Phase 3
-                                                            </small>
+                                                            <small className="text-muted d-block">Phase 3</small>
                                                             <strong>
-                                                                {getSelectedPremiumConfig()
-                                                                    .duration3 ||
-                                                                    "N/A"}
-                                                                {getSelectedPremiumConfig()
-                                                                    .duration3 &&
-                                                                    "s"}
-                                                                {getSelectedPremiumConfig()
-                                                                    .cost3 &&
-                                                                    ` / ${getSelectedPremiumConfig().cost3}€`}
+                                                                {getSelectedPremiumConfig().cost3 || 'N/A'}
+                                                                {getSelectedPremiumConfig().cost3 && '€'}
+                                                                {getSelectedPremiumConfig().duration3 && ` / ${getSelectedPremiumConfig().duration3}s`}
                                                             </strong>
                                                         </div>
                                                     </div>
                                                     <div className="mt-2 pt-2 border-top">
-                                                        <small className="text-muted">
-                                                            Estimated Cost:
-                                                        </small>
-                                                        <strong className="ms-2 text-danger">
-                                                            {calculateEstimatedCost()}{" "}
-                                                            EUR
-                                                        </strong>
+                                                        <small className="text-muted">Estimated Cost:</small>
+                                                        <strong className="ms-2 text-danger">{calculateEstimatedCost()} EUR</strong>
                                                     </div>
                                                 </div>
                                             </div>
@@ -414,18 +315,15 @@ function VoiceCallsTab({ user }) {
                                         type="submit"
                                         className="btn w-100"
                                         style={{
-                                            backgroundColor: "#ff7a00",
-                                            color: "#000",
-                                            fontWeight: "bold",
+                                            backgroundColor: '#ff7a00',
+                                            color: '#000',
+                                            fontWeight: 'bold',
                                         }}
                                         disabled={activeCall || loading}
                                     >
                                         {loading ? (
                                             <>
-                                                <span
-                                                    className="spinner-border spinner-border-sm me-2"
-                                                    role="status"
-                                                ></span>
+                                                <span className="spinner-border spinner-border-sm me-2" role="status"></span>
                                                 Starting Call...
                                             </>
                                         ) : (
@@ -442,16 +340,10 @@ function VoiceCallsTab({ user }) {
 
                     <div className="col-lg-6">
                         <div className="card shadow-sm h-100">
-                            <div
-                                className={`card-header text-white ${
-                                    activeCall ? "bg-success" : "bg-secondary"
-                                }`}
-                            >
+                            <div className={`card-header text-white ${activeCall ? 'bg-success' : 'bg-secondary'}`}>
                                 <h5 className="mb-0">
                                     <i className="bi bi-activity me-2"></i>
-                                    {activeCall
-                                        ? "Active Call"
-                                        : "No Active Call"}
+                                    {activeCall ? 'Active Call' : 'No Active Call'}
                                 </h5>
                             </div>
                             <div className="card-body d-flex flex-column">
@@ -459,8 +351,8 @@ function VoiceCallsTab({ user }) {
                                     <div
                                         className="text-center"
                                         style={{
-                                            display: "flex",
-                                            flexDirection: "column",
+                                            display: 'flex',
+                                            flexDirection: 'column',
                                             flex: 1,
                                         }}
                                     >
@@ -468,108 +360,56 @@ function VoiceCallsTab({ user }) {
                                             <div
                                                 className="rounded-circle bg-success mx-auto mb-3 d-flex align-items-center justify-content-center animate-pulse"
                                                 style={{
-                                                    width: "100px",
-                                                    height: "100px",
+                                                    width: '100px',
+                                                    height: '100px',
                                                 }}
                                             >
-                                                <i
-                                                    className="bi bi-telephone-fill text-white"
-                                                    style={{ fontSize: "3rem" }}
-                                                ></i>
+                                                <i className="bi bi-telephone-fill text-white" style={{ fontSize: '3rem' }}></i>
                                             </div>
-                                            <h3 className="fw-bold mb-0">
-                                                {formatDuration(elapsedTime)}
-                                            </h3>
-                                            <small className="text-muted">
-                                                of{" "}
-                                                {formatDuration(
-                                                    activeCall.requestedDuration,
-                                                )}
-                                            </small>
+                                            <h3 className="fw-bold mb-0">{formatDuration(elapsedTime)}</h3>
+                                            <small className="text-muted">of {formatDuration(activeCall.requestedDuration)}</small>
                                         </div>
 
                                         <div className="mb-4">
-                                            <div
-                                                className="progress"
-                                                style={{ height: "25px" }}
-                                            >
+                                            <div className="progress" style={{ height: '25px' }}>
                                                 <div
                                                     className="progress-bar progress-bar-striped progress-bar-animated bg-success"
                                                     role="progressbar"
                                                     style={{
-                                                        width: `${
-                                                            (elapsedTime /
-                                                                activeCall.requestedDuration) *
-                                                            100
-                                                        }%`,
+                                                        width: `${(elapsedTime / activeCall.requestedDuration) * 100}%`,
                                                     }}
                                                 >
-                                                    {Math.round(
-                                                        (elapsedTime /
-                                                            activeCall.requestedDuration) *
-                                                            100,
-                                                    )}
-                                                    %
+                                                    {Math.round((elapsedTime / activeCall.requestedDuration) * 100)}%
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div
-                                            className="mb-0"
-                                            style={{ flex: 1 }}
-                                        >
+                                        <div className="mb-0" style={{ flex: 1 }}>
                                             <div className="card bg-light h-100">
                                                 <div className="card-body">
                                                     <div className="row g-3">
                                                         <div className="col-6">
-                                                            <small className="text-muted d-block">
-                                                                Call ID
-                                                            </small>
-                                                            <strong>
-                                                                #
-                                                                {
-                                                                    activeCall.callId
-                                                                }
-                                                            </strong>
+                                                            <small className="text-muted d-block">Call ID</small>
+                                                            <strong>#{activeCall.callId}</strong>
                                                         </div>
                                                         <div className="col-6">
-                                                            <small className="text-muted d-block">
-                                                                Premium Number
-                                                            </small>
-                                                            <strong>
-                                                                {
-                                                                    activeCall.premiumNumber
-                                                                }
-                                                            </strong>
+                                                            <small className="text-muted d-block">Premium Number</small>
+                                                            <strong>{activeCall.premiumNumber}</strong>
                                                         </div>
                                                         {phaseInfo && (
                                                             <div className="col-12">
-                                                                <small className="text-muted d-block mb-2">
-                                                                    Current
-                                                                    Phase
-                                                                </small>
-                                                                <div
-                                                                    className={`alert alert-${phaseInfo.color === "success" ? "success" : phaseInfo.color === "warning" ? "warning" : "danger"} mb-0`}
-                                                                >
+                                                                <small className="text-muted d-block mb-2">Current Phase</small>
+                                                                <div className={`alert alert-${phaseInfo.color === 'success' ? 'success' : phaseInfo.color === 'warning' ? 'warning' : 'danger'} mb-0`}>
                                                                     <div className="d-flex align-items-center">
                                                                         <i
                                                                             className="bi bi-info-circle-fill me-2"
                                                                             style={{
-                                                                                fontSize:
-                                                                                    "1.2rem",
+                                                                                fontSize: '1.2rem',
                                                                             }}
                                                                         ></i>
                                                                         <div>
-                                                                            <strong className="d-block">
-                                                                                {
-                                                                                    phaseInfo.name
-                                                                                }
-                                                                            </strong>
-                                                                            <small>
-                                                                                {
-                                                                                    phaseInfo.description
-                                                                                }
-                                                                            </small>
+                                                                            <strong className="d-block">{phaseInfo.name}</strong>
+                                                                            <small>{phaseInfo.description}</small>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -585,15 +425,12 @@ function VoiceCallsTab({ user }) {
                                         <i
                                             className="bi bi-telephone-x"
                                             style={{
-                                                fontSize: "4rem",
+                                                fontSize: '4rem',
                                                 opacity: 0.3,
                                             }}
                                         ></i>
                                         <p className="mt-3">No active call</p>
-                                        <small>
-                                            Start a call to see real-time
-                                            monitoring
-                                        </small>
+                                        <small>Start a call to see real-time monitoring</small>
                                     </div>
                                 )}
                             </div>
@@ -604,10 +441,7 @@ function VoiceCallsTab({ user }) {
                 <div className="row mt-4">
                     <div className="col-12">
                         <div className="card shadow-sm">
-                            <div
-                                className="card-header text-white"
-                                style={{ backgroundColor: "#ff7a00" }}
-                            >
+                            <div className="card-header text-white" style={{ backgroundColor: '#ff7a00' }}>
                                 <h5 className="mb-0">
                                     <i className="bi bi-clock-history me-2"></i>
                                     Recent Calls
@@ -648,44 +482,24 @@ function VoiceCallsTab({ user }) {
                                                             <span
                                                                 className="badge"
                                                                 style={{
-                                                                    backgroundColor:
-                                                                        "#ff7a00",
-                                                                    color: "#000",
+                                                                    backgroundColor: '#ff7a00',
+                                                                    color: '#000',
                                                                 }}
                                                             >
                                                                 #{call.id}
                                                             </span>
                                                         </td>
                                                         <td>
-                                                            <span className="badge bg-danger">
-                                                                {call
-                                                                    .premiumNumber
-                                                                    ?.phoneNumber ||
-                                                                    "N/A"}
-                                                            </span>
+                                                            <span className="badge bg-danger">{call.premiumNumber?.phoneNumber || 'N/A'}</span>
                                                         </td>
                                                         <td>
-                                                            <strong>
-                                                                {formatDuration(
-                                                                    call.durationSeconds ||
-                                                                        0,
-                                                                )}
-                                                            </strong>
+                                                            <strong>{formatDuration(call.durationSeconds || 0)}</strong>
                                                         </td>
                                                         <td>
-                                                            <span className="text-danger fw-bold">
-                                                                {call.chargedAmount?.toFixed(
-                                                                    2,
-                                                                )}{" "}
-                                                                EUR
-                                                            </span>
+                                                            <span className="text-danger fw-bold">{call.chargedAmount?.toFixed(2)} EUR</span>
                                                         </td>
                                                         <td>
-                                                            <small className="text-muted">
-                                                                {formatTimestamp(
-                                                                    call.callTimestamp,
-                                                                )}
-                                                            </small>
+                                                            <small className="text-muted">{formatTimestamp(call.callTimestamp)}</small>
                                                         </td>
                                                     </tr>
                                                 ))}
@@ -697,17 +511,12 @@ function VoiceCallsTab({ user }) {
                                         <i
                                             className="bi bi-inbox"
                                             style={{
-                                                fontSize: "3rem",
+                                                fontSize: '3rem',
                                                 opacity: 0.3,
                                             }}
                                         ></i>
-                                        <p className="mt-2">
-                                            No call history yet
-                                        </p>
-                                        <small>
-                                            Your completed calls will appear
-                                            here
-                                        </small>
+                                        <p className="mt-2">No call history yet</p>
+                                        <small>Your completed calls will appear here</small>
                                     </div>
                                 )}
                             </div>
