@@ -1,0 +1,4 @@
+[2026-01-07T19:59:59.988626525] Starting deleteOldTransactions procedure
+[2026-01-07T20:00:00.053314654] deleteOldTransactions completed successfully
+[2026-01-07T21:59:59.825608188] Starting deleteUncommittedTransactions procedure
+[2026-01-07T21:59:59.893993032] deleteUncommittedTransactions completed successfully

@@ -1,12 +1,19 @@
 package com.example.tpcm_spring.controller.app;
 
+import com.example.tpcm_spring.models.app.Customer;
 import com.example.tpcm_spring.models.app.Limit;
+import com.example.tpcm_spring.models.app.Subscriber;
 import com.example.tpcm_spring.service.app.LimitServiceApp;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.ArrayList;
 
+import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController("app.LimitController")
 @RequestMapping("/api/app/limits")
@@ -14,6 +21,8 @@ import java.util.List;
 public class LimitController {
 
     private final LimitServiceApp limitService;
+    private final com.example.tpcm_spring.service.app.SubscriberServiceApp subscriberService;
+    private final com.example.tpcm_spring.service.app.CustomerServiceApp customerService;
 
     @PostMapping
     public ResponseEntity<Limit> createLimit(@RequestBody Limit limit) {

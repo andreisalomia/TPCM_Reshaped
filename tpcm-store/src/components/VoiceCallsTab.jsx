@@ -289,8 +289,8 @@ function VoiceCallsTab({ user }) {
                                                         <div className="col-4">
                                                             <small className="text-muted d-block">Phase 2</small>
                                                             <strong>
-                                                                {getSelectedPremiumConfig().cost2}s{' / '}
-                                                                {getSelectedPremiumConfig().duration2}€
+                                                                {getSelectedPremiumConfig().cost2}€{' / '}
+                                                                {getSelectedPremiumConfig().duration2}s
                                                             </strong>
                                                         </div>
                                                         <div className="col-4">

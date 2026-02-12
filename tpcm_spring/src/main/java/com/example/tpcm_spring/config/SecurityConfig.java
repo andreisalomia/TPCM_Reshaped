@@ -24,7 +24,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-//                csrf este dezactivat pentru ca nu avem frontend browser, trimited request-uri direct
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/auth/**").permitAll()
@@ -51,7 +50,7 @@ public class SecurityConfig {
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(oAuthSuccessHandler)
                 )
-                .httpBasic(httpBasic -> { /*aici ar veni configuratia de entry point */});
+                .httpBasic(httpBasic -> {});
 
         return http.build();
     }
