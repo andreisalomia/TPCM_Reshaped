@@ -13,35 +13,26 @@ services:
       - "1521:1521"
       - "5500:5500"
     environment:
-    - ORACLE_PWD=matcha123
-    - ORACLE_CHARACTERSET=AL32UTF8
+      - ORACLE_PWD=${ORACLE_PWD}
+      - ORACLE_CHARACTERSET=${ORACLE_CHARACTERSET}
     volumes:
       - oracle-data:/opt/oracle/oradata
     networks:
       - tpcm-network
-  tpcm-scheduler:
-    build:
-      context: ./tpcm-scheduler
-      dockerfile: Dockerfile
-    container_name: tpcm-scheduler
-    ports:
-      - "7000:7000"
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    volumes:
-      - ./tpcm-scheduler/logs:/app/logs
-    depends_on:
-      - oracle
-    networks:
-      - tpcm-network
-    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "echo 'SELECT 1 FROM DUAL;' | sqlplus -s system/${ORACLE_PWD}@//localhost:1521/FREEPDB1 | grep -q '1'"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 180s
+
   kafka:
     image: apache/kafka:4.0.0
     container_name: kafka
     ports:
       - "9092:9092"
     environment:
-      KAFKA_NODE_ID: 1
+      KAFKA_NODE_ID: ${KAFKA_NODE_ID:-1}
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
       KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT_HOST://localhost:9092,PLAINTEXT://kafka:29092'
       KAFKA_LISTENERS: 'PLAINTEXT_HOST://0.0.0.0:9092,CONTROLLER://kafka:29093,PLAINTEXT://0.0.0.0:29092'
@@ -56,13 +47,38 @@ services:
       KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:29093'
     networks:
       - tpcm-network
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server localhost:29092 || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 40s
+
+  tpcm-scheduler:
+    build:
+      context: ./tpcm-scheduler
+      dockerfile: Dockerfile
+    container_name: tpcm-scheduler
+    ports:
+      - "7000:7000"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    volumes:
+      - ./tpcm-scheduler/logs:/app/logs
+    depends_on:
+      oracle:
+        condition: service_healthy
+    networks:
+      - tpcm-network
+    restart: on-failure:5
+
   tpcm-spring:
     build:
       context: ./tpcm_spring
       dockerfile: Dockerfile
     container_name: tpcm_spring
     healthcheck:
-      test: ["CMD-SHELL", "busybox wget -q -O - --header 'Authorization: Basic YWRtaW46YWRtaW4=' http://localhost:8080/actuator/health || exit 1"]
+      test: ["CMD-SHELL", "busybox wget -q -O - http://localhost:8080/actuator/health || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -74,11 +90,13 @@ services:
     volumes:
       - ./tpcm_spring/logs:/app/logs
     depends_on:
-      - oracle
-      - kafka
+      oracle:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
     networks:
       - tpcm-network
-    restart: unless-stopped
+    restart: on-failure:5
 
   kafka-consumer:
     build:
@@ -93,14 +111,14 @@ services:
       - ./KafkaConsumerTPCM/logs:/app/logs
     depends_on:
       oracle:
-        condition: service_started
+        condition: service_healthy
       kafka:
-        condition: service_started
+        condition: service_healthy
       tpcm-spring:
         condition: service_healthy
     networks:
       - tpcm-network
-    restart: unless-stopped
+    restart: on-failure:5
 
   voice-simulator:
     build:
@@ -114,11 +132,14 @@ services:
     volumes:
       - ./TPCM_Voice_Simulator/logs:/app/logs
     depends_on:
-      - oracle
-      - tpcm-spring
+      oracle:
+        condition: service_healthy
+      tpcm-spring:
+        condition: service_healthy
     networks:
       - tpcm-network
-    restart: unless-stopped
+    restart: on-failure:5
+
   tpcm-store:
     build:
       context: ./tpcm-store
@@ -131,4 +152,4 @@ services:
         condition: service_healthy
     networks:
       - tpcm-network
-    restart: unless-stopped
+    restart: on-failure:5
