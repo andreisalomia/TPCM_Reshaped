@@ -1,5 +1,6 @@
 import openAIService from './openAIService';
 import chatbotApiService from './chatbotApiService';
+import logAnalysisService from './logAnalysisService';
 
 export class ChatbotOrchestrator {
 
@@ -18,7 +19,12 @@ export class ChatbotOrchestrator {
                 };
             }
 
-            const data = await this.fetchDataFromExistingEndpoints(analysis);
+            let data;
+            if (analysis.dataType === 'msisdn_history' || analysis.dataType === 'address_history') {
+                data = await this.fetchLogData(analysis);
+            } else {
+                data = await this.fetchDataFromExistingEndpoints(analysis);
+            }
 
             const formattedResponse = await this.formatResponse(userMessage, analysis, data);
 
@@ -44,27 +50,36 @@ USER MESSAGE: "${userMessage}"
 
 You need to determine:
 1. Wether data is needed from existing endpoints? Boolean: true or false
-2. What type of data? (limit_reset, status, balance, or none)
+2. What type of data? 
+   - limit_reset = asking about when limit was reset
+   - status = asking about subscriber status  
+   - balance = asking about balance
+   - msisdn_history = asking about phone number CHANGES/HISTORY for a subscriber
+   - address_history = asking about address CHANGES/HISTORY for a customer
+   - none = greeting or other
 3. What identifier is mentioned?
    - MSISDN (phone number): 10-12 digits, may include +40 prefix
    - Name: person's name like "Ion Popescu", "Maria Ionescu", etc.
-   - If both, prefer MSISDN
-4. If not a data request, provide a helpful response
+   - Subscriber ID: number after "subscriber"
+   - Customer ID: number after "customer"
 
 Respond in this JSON format:
 {
   "needsData": boolean,
-  "dataType": "limit_reset|status|balance|none", 
+  "dataType": "limit_reset|status|balance|msisdn_history|address_history|none", 
   "msisdn": "extracted phone number or null",
   "name": "extracted person name or null",
+  "subscriberId": "extracted subscriber ID or null",
+  "customerId": "extracted customer ID or null",
   "response": "direct response if needsData is false"
 }
 
 Examples:
-- "When was limit reset for +40721234567?" → {"needsData": true, "dataType": "limit_reset", "msisdn": "+40721234567", "name": null}
-- "Is the subscriber Ion Popescu active?" → {"needsData": true, "dataType": "status", "msisdn": null, "name": "Ion Popescu"}  
-- "Check balance for Maria Ionescu" → {"needsData": true, "dataType": "balance", "msisdn": null, "name": "Maria Ionescu"}
-- "Hello" → {"needsData": false, "dataType": "none", "msisdn": null, "name": null, "response": "Hello! How can I assist you today?"}
+- "When was limit reset for +40721234567?" → {"needsData": true, "dataType": "limit_reset", "msisdn": "+40721234567", "name": null, "subscriberId": null, "customerId": null}
+- "When was the phone number changed for subscriber 12?" → {"needsData": true, "dataType": "msisdn_history", "msisdn": null, "name": null, "subscriberId": "12", "customerId": null}
+- "Show address history for customer 21" → {"needsData": true, "dataType": "address_history", "msisdn": null, "name": null, "subscriberId": null, "customerId": "21"}
+- "What was Ion Popescu's old address?" → {"needsData": true, "dataType": "address_history", "msisdn": null, "name": "Ion Popescu", "subscriberId": null, "customerId": null}
+- "Hello" → {"needsData": false, "dataType": "none", "msisdn": null, "name": null, "subscriberId": null, "customerId": null, "response": "Hello! How can I assist you today?"}
 
 Currency: Always use EUR in responses.
 Try to respond in Romanian ONLY IF the user asked in Romanian.`;
@@ -143,6 +158,78 @@ Try to respond in Romanian ONLY IF the user asked in Romanian.`;
             name: null,
             response: 'Hello! I can help you check subscribers information. Please provide an MSISDN or customer name.'
         };
+    }
+
+    async fetchLogData(analysis) {
+        try {
+            let operation, identifier;
+
+            if (analysis.dataType === 'msisdn_history') {
+                operation = 'updateSubscriberMsisdn';
+
+                if (analysis.subscriberId || analysis.msisdn) {
+                    identifier = analysis.subscriberId || analysis.msisdn;
+                } else if (analysis.name) {
+                    const nameSearchResult = await chatbotApiService.searchByName(analysis.name);
+
+                    if (!nameSearchResult.found || nameSearchResult.subscribers.length === 0) {
+                        throw new Error(`No subscriber found for customer name: ${analysis.name}`);
+                    }
+
+                    const firstSubscriber = nameSearchResult.subscribers[0];
+                    identifier = firstSubscriber.msisdn;
+
+                    analysis._searchInfo = {
+                        searchedByName: true,
+                        customerName: firstSubscriber.customerName,
+                        foundCount: nameSearchResult.count,
+                        msisdn: firstSubscriber.msisdn
+                    };
+                } else {
+                    throw new Error('Subscriber ID, MSISDN, or customer name required');
+                }
+
+            } else if (analysis.dataType === 'address_history') {
+                operation = 'updateCustomerAddress';
+
+                if (analysis.customerId) {
+                    identifier = analysis.customerId;
+                } else if (analysis.name) {
+                    identifier = analysis.name;
+                } else {
+                    throw new Error('Customer ID or name required');
+                }
+
+            } else {
+                throw new Error('Unknown log data type');
+            }
+
+            const logLines = await logAnalysisService.getLogLines(operation, identifier);
+
+            if (!logLines || logLines.length === 0) {
+                return {
+                    found: false,
+                    dataType: analysis.dataType,
+                    message: 'No log entries found',
+                    operation,
+                    identifier
+                };
+            }
+
+            return {
+                found: true,
+                dataType: analysis.dataType,
+                operation,
+                identifier,
+                logLines: logLines,
+                totalLines: logLines.length,
+                searchInfo: analysis._searchInfo
+            };
+
+        } catch (error) {
+            console.error('Error fetching log data:', error);
+            throw error;
+        }
     }
 
     async fetchDataFromExistingEndpoints(analysis) {
@@ -226,16 +313,38 @@ Try to respond in Romanian ONLY IF the user asked in Romanian.`;
             }
         }
 
+        let logContext = '';
+        if (data.dataType === 'msisdn_history' || data.dataType === 'address_history') {
+            if (data.found && data.logLines) {
+                logContext = `\n\nCDR LOG ENTRIES (${data.totalLines} lines):\n${data.logLines.join('\n')}`;
+                logContext += `\n\nCDR Format: timestamp|operation_name|request_id|http_code|internal_result|operation_specific_details`;
+
+                if (data.dataType === 'msisdn_history') {
+                    logContext += `\nFor updateSubscriberMsisdn: subscriberId|oldMsisdn|newMsisdn`;
+                } else {
+                    logContext += `\nFor updateCustomerAddress: customerId|oldAddress|newAddress`;
+                }
+            }
+        }
+
         const formatPrompt = `Format this data into a natural, helpful response for a customer support operator.
 
 USER ASKED: "${userMessage}"
 DATA TYPE: ${analysis.dataType}
-SEARCH BY: ${analysis.msisdn ? 'MSISDN' : 'Customer Name'}
-RAW DATA: ${JSON.stringify(data)}${contextInfo}
+SEARCH BY: ${analysis.msisdn ? 'MSISDN' : analysis.subscriberId ? 'Subscriber ID' : analysis.customerId ? 'Customer ID' : 'Customer Name'}
+RAW DATA: ${JSON.stringify(data)}${contextInfo}${logContext}
 
 Create a natural, conversational response that:
 1. Answers the user's question directly
-2. Shows key information clearly
+2. For log queries (msisdn_history, address_history):
+   - Parse the CDR log lines yourself
+   - Show the COMPLETE history of changes (from -> to, with dates)
+   - Mention how many changes occurred
+   - Show the most recent change prominently
+   THE FORMAT OF THE CDR LOGS IS: timestamp|operation_name|request_id|http_code|internal_result|operation_specific_details
+   Operation specific details are:
+   updateSubscriberMsisdn <-> subscriberId|oldMsisdn|newMsisdn
+   updateCustomerEmail <-> customerId|oldEmail|newEmail
 3. If searched by name, mention the customer name and MSISDN found
 4. Uses EUR for currency (not RON)
 5. Uses Romanian ONLY AND ONLY if the user asked in Romanian
@@ -258,6 +367,14 @@ No excessive formatting, do not mention you're an AI, don't apologize, don't use
 
     fallbackFormat(analysis, data) {
         switch (analysis.dataType) {
+            case 'msisdn_history':
+                if (!data.found) return 'No phone number changes found.';
+                return `Found ${data.totalLines} phone number change entries for ${data.operation}/${data.identifier}. Please check the logs for details.`;
+
+            case 'address_history':
+                if (!data.found) return 'No address changes found.';
+                return `Found ${data.totalLines} address change entries for ${data.operation}/${data.identifier}. Please check the logs for details.`;
+
             case 'limit_reset':
                 return `Limit reset info for ${data.msisdn}: Last reset: ${new Date(data.lastReset).toLocaleString()} Days since reset: ${data.daysSinceReset || 0} Consumed: ${data.consumedAmount} EUR`;
 
