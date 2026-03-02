@@ -17,6 +17,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Counter;
+
 @RestController
 @RequestMapping("/api/app/chatbot")
 @RequiredArgsConstructor
@@ -24,6 +27,8 @@ public class ChatbotController {
 
     private final CustomerServiceApp customerService;
     private final SubscriberServiceApp subscriberService;
+
+    private final MeterRegistry meterRegistry;
 
     private static final String CDR_LOG_PATH = "logs/cdr.log";
     private static final int MAX_LOG_LINES = 1000;
@@ -100,6 +105,14 @@ public class ChatbotController {
         } catch (IOException e) {
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    @PostMapping("/track-query")
+    public ResponseEntity<Void> trackQuery() {
+        Counter.builder("tpcm_chatbot_queries")
+            .register(meterRegistry)
+            .increment();
+        return ResponseEntity.ok().build();
     }
 
     private boolean matchesOperation(String line, String operation, String identifier) {

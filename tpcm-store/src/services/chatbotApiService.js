@@ -36,6 +36,10 @@ export const chatbotApiService = {
         }
     },
 
+    trackQuery: () => {
+        api.post('/api/app/chatbot/track-query').catch(() => {});
+    },
+
     getSubscriberBalance: async (msisdn) => {
         try {
             const response = await api.get(`/api/app/transactions/flow/balance/${msisdn}`);

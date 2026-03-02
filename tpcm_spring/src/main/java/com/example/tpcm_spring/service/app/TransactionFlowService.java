@@ -17,6 +17,9 @@ import jakarta.persistence.PersistenceContext;
 import java.sql.Timestamp;
 import java.util.List;
 
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Counter;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -28,6 +31,8 @@ public class TransactionFlowService {
     private final ThirdPartyRepository thirdPartyRepository;
     private final LogEventRepository logEventRepository;
     private final CdrLogger cdrLogger;
+
+    private final MeterRegistry meterRegistry;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -88,6 +93,10 @@ public class TransactionFlowService {
         transaction.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
         transaction = transactionRepository.save(transaction);
+
+        // Metric
+        Counter.builder("tpcm_transactions").tag("channel", channel != null ? channel : "UNKNOWN").register(meterRegistry).increment();
+
         logEvent("TRANSACTION_PENDING", subscriber.getSubscriberID(), transaction.getTransactionId(),
                 "Transaction initialized and pending.");
 
@@ -105,6 +114,13 @@ public class TransactionFlowService {
             logEvent("TRANSACTION_REJECTED_MAX_TRANSACTION", subscriber.getSubscriberID(), transaction.getTransactionId(),
                     "Amount exceeds maximum per transaction limit");
             log.warn("Transaction {} rejected: Amount exceeds limit", transaction.getTransactionId());
+
+            // Metric
+            Counter.builder("tpcm_transactions_rejected")
+                .tag("reason", "transaction_limit")
+                .register(meterRegistry)
+                .increment();
+
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
                     "Amount exceeds maximum per transaction limit. Requested: " + amount +
                             ", Max allowed per transaction: " + limit.getMaxAmountTransaction());
@@ -125,6 +141,13 @@ public class TransactionFlowService {
             logEvent("TRANSACTION_REJECTED_BALANCE", subscriber.getSubscriberID(), transaction.getTransactionId(),
                     "Insufficient balance. Available: " + availableBalance + ", Requested: " + amount);
             log.warn("Transaction {} rejected: Insufficient balance", transaction.getTransactionId());
+
+            // Metric
+            Counter.builder("tpcm_transactions_rejected")
+                .tag("reason", "threshold_reached")
+                .register(meterRegistry)
+                .increment();
+
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Insufficient balance. Available: " + availableBalance + ", Requested: " + amount);
         }
 
