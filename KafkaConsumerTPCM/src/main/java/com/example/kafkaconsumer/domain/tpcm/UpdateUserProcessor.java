@@ -27,6 +27,6 @@ public class UpdateUserProcessor extends AbstractMessageProcessor<UpdateUser> {
                 updateUser.getRole()
         );
 
-        log.info("Successfully processed UPDATE_USER for user ID: {}", updateUser.getUserID());
+        log.info("Finished processing UPDATE_USER for user ID: {}", updateUser.getUserID());
     }
 }

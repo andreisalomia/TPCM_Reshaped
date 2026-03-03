@@ -29,6 +29,6 @@ public class UpdateCustomerNameProcessor extends AbstractMessageProcessor<Update
                 null
         );
 
-        log.info("Successfully processed UPDATE_CUSTOMER_NAME for customer ID: {}", updateCustomerName.getCustomerID());
+        log.info("Finished processing UPDATE_CUSTOMER_NAME for customer ID: {}", updateCustomerName.getCustomerID());
     }
 }

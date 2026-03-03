@@ -23,6 +23,6 @@ public class CloseCustomerProcessor extends AbstractMessageProcessor<CloseCustom
 
         tpcmApiService.deleteCustomer(closeCustomer.getCustomerID());
 
-        log.info("Successfully processed CLOSE_CUSTOMER for customer ID: {}", closeCustomer.getCustomerID());
+        log.info("Finished processing CLOSE_CUSTOMER for customer ID: {}", closeCustomer.getCustomerID());
     }
 }

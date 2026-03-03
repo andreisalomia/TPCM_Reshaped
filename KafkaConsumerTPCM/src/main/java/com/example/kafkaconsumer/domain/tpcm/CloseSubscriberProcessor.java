@@ -23,6 +23,6 @@ public class CloseSubscriberProcessor extends AbstractMessageProcessor<CloseSubs
 
         tpcmApiService.deleteSubscriber(closeSubscriber.getSubscriberID());
 
-        log.info("Successfully processed CLOSE_SUBSCRIBER for subscriber ID: {}", closeSubscriber.getSubscriberID());
+        log.info("Finished processing CLOSE_SUBSCRIBER for subscriber ID: {}", closeSubscriber.getSubscriberID());
     }
 }

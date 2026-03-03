@@ -29,6 +29,6 @@ public class ChangeMsisdnProcessor extends AbstractMessageProcessor<ChangeMsisdn
                 null
         );
 
-        log.info("Successfully processed CHANGE_MSISDN for subscriber ID: {}", changeMsisdn.getSubscriberID());
+        log.info("Finished processing CHANGE_MSISDN for subscriber ID: {}", changeMsisdn.getSubscriberID());
     }
 }

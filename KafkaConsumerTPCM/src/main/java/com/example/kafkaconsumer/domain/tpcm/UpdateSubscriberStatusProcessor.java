@@ -29,6 +29,6 @@ public class UpdateSubscriberStatusProcessor extends AbstractMessageProcessor<Up
                 null
         );
 
-        log.info("Successfully processed UPDATE_SUBSCRIBER_STATUS for subscriber ID: {}", updateSubscriberStatus.getSubscriberID());
+        log.info("Finished processing UPDATE_SUBSCRIBER_STATUS for subscriber ID: {}", updateSubscriberStatus.getSubscriberID());
     }
 }

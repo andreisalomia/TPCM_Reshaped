@@ -29,6 +29,6 @@ public class UpdateSubscriberCustomerProcessor extends AbstractMessageProcessor<
                 updateSubscriberCustomer.getCustomerID()
         );
 
-        log.info("Successfully processed UPDATE_SUBSCRIBER_CUSTOMER for subscriber ID: {}", updateSubscriberCustomer.getSubscriberID());
+        log.info("Finished processing UPDATE_SUBSCRIBER_CUSTOMER for subscriber ID: {}", updateSubscriberCustomer.getSubscriberID());
     }
 }

@@ -29,6 +29,6 @@ public class SetBillDayProcessor extends AbstractMessageProcessor<SetBillDay> {
                 null
         );
 
-        log.info("Successfully processed SET_BILL_DAY for customer ID: {}", setBillDay.getCustomerID());
+        log.info("Finished processing SET_BILL_DAY for customer ID: {}", setBillDay.getCustomerID());
     }
 }

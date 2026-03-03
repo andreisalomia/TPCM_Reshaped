@@ -21,7 +21,7 @@ public class DatabaseScheduler {
     @Qualifier("clientsJdbc")
     private final JdbcTemplate clientsJdbc;
 
-    @Scheduled(cron = ScheduleConstants.RESET_THRESHOLD_CRON)
+    @Scheduled(cron = "${schedule.cron.reset-threshold}")
     public void resetThreshold() {
         try {
             log.info("[{}] Starting resetThreshold procedure", LocalDateTime.now());
@@ -32,7 +32,7 @@ public class DatabaseScheduler {
         }
     }
 
-    @Scheduled(cron = ScheduleConstants.DELETE_UNCOMMITTED_TRANSACTIONS_CRON)
+    @Scheduled(cron = "${schedule.cron.delete-uncommitted-transactions}")
     public void deleteUncommittedTransactions() {
         try {
             log.info("[{}] Starting deleteUncommittedTransactions procedure", LocalDateTime.now());
@@ -43,7 +43,7 @@ public class DatabaseScheduler {
         }
     }
 
-    @Scheduled(cron = ScheduleConstants.DELETE_OLD_TRANSACTIONS_CRON)
+    @Scheduled(cron = "${schedule.cron.delete-old-transactions}")
     public void deleteOldTransactions() {
         try {
             log.info("[{}] Starting deleteOldTransactions procedure", LocalDateTime.now());
@@ -54,7 +54,7 @@ public class DatabaseScheduler {
         }
     }
 
-    @Scheduled(cron = ScheduleConstants.DELETE_OLD_APP_EVENTS_CRON)
+    @Scheduled(cron = "${schedule.cron.delete-old-app-events}")
     public void deleteOldAppEvents() {
         try {
             log.info("[{}] Starting deleteOldAppEvents procedure", LocalDateTime.now());
@@ -65,7 +65,7 @@ public class DatabaseScheduler {
         }
     }
 
-    @Scheduled(cron = ScheduleConstants.PARTITION_TRANSACTIONS_CRON)
+    @Scheduled(cron = "${schedule.cron.partition-transactions}")
     public void partitionTransactions() {
         try {
             log.info("[{}] Starting partitionTransactions procedure", LocalDateTime.now());
@@ -76,7 +76,7 @@ public class DatabaseScheduler {
         }
     }
 
-    @Scheduled(cron = ScheduleConstants.DELETE_OLD_SUBSCRIBER_LOGS_CRON)
+    @Scheduled(cron = "${schedule.cron.delete-old-subscriber-logs}")
     public void deleteOldSubscriberLogs() {
         try {
             log.info("[{}] Starting deleteOldSubscriberLogs procedure", LocalDateTime.now());
@@ -87,7 +87,7 @@ public class DatabaseScheduler {
         }
     }
 
-    @Scheduled(cron = ScheduleConstants.DELETE_OLD_CUSTOMER_LOGS_CRON)
+    @Scheduled(cron = "${schedule.cron.delete-old-customer-logs}")
     public void deleteOldCustomerLogs() {
         try {
             log.info("[{}] Starting deleteOldCustomerLogs procedure", LocalDateTime.now());

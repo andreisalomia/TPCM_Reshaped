@@ -23,6 +23,6 @@ public class CloseUserProcessor extends AbstractMessageProcessor<CloseUser> {
 
         tpcmApiService.deleteUser(closeUser.getUserID());
 
-        log.info("Successfully processed CLOSE_USER for user ID: {}", closeUser.getUserID());
+        log.info("Finished processing CLOSE_USER for user ID: {}", closeUser.getUserID());
     }
 }

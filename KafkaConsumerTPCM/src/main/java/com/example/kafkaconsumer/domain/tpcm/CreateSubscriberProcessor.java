@@ -29,6 +29,6 @@ public class CreateSubscriberProcessor extends AbstractMessageProcessor<CreateSu
                 createSubscriber.getCustomerID()
         );
 
-        log.info("Successfully processed CREATE_SUBSCRIBER for subscriber ID: {}", createSubscriber.getSubscriberID());
+        log.info("Finished processing CREATE_SUBSCRIBER for subscriber ID: {}", createSubscriber.getSubscriberID());
     }
 }

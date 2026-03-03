@@ -27,6 +27,6 @@ public class CreateUserProcessor extends AbstractMessageProcessor<CreateUser> {
                 createUser.getRole()
         );
 
-        log.info("Successfully processed CREATE_USER for user ID: {}", createUser.getUserID());
+        log.info("Finished processing CREATE_USER for user ID: {}", createUser.getUserID());
     }
 }

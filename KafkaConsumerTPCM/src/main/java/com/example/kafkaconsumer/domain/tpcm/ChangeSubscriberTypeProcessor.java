@@ -29,6 +29,6 @@ public class ChangeSubscriberTypeProcessor extends AbstractMessageProcessor<Chan
                 null
         );
 
-        log.info("Successfully processed CHANGE_SUBSCRIBER_TYPE for subscriber ID: {}", changeSubscriberType.getSubscriberID());
+        log.info("Finished processing CHANGE_SUBSCRIBER_TYPE for subscriber ID: {}", changeSubscriberType.getSubscriberID());
     }
 }

@@ -28,6 +28,6 @@ public class CreateCustomerProcessor extends AbstractMessageProcessor<CreateCust
                 createCustomer.getBillCycleDay()
         );
 
-        log.info("Successfully processed CREATE_CUSTOMER for customer ID: {}", createCustomer.getCustomerID());
+        log.info("Finished processing CREATE_CUSTOMER for customer ID: {}", createCustomer.getCustomerID());
     }
 }
