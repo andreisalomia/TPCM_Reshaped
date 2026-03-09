@@ -66,6 +66,7 @@ public class CustomerServiceApp {
         existing.setType(updated.getType());
         existing.setNrSubscribers(updated.getNrSubscribers());
         existing.setBillCycleDay(updated.getBillCycleDay());
+        existing.setEmail(updated.getEmail());
 
         log.info("Updating customer with ID: {}", id);
         return customerRepository.save(existing);

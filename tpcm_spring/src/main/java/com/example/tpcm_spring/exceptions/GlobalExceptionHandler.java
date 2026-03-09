@@ -13,8 +13,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @Hidden
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private static final AppExceptionSource DEFAULT_SOURCE = AppExceptionSource.APP;
-
     @ExceptionHandler(ValidationException.class)
     protected ResponseEntity<Object> handleValidation(ValidationException ex, WebRequest request) {
         return buildResponse(HttpStatus.BAD_REQUEST, "Validation Error", ex.getMessage(), request, ex);
@@ -41,15 +39,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     private ResponseEntity<Object> buildResponse(HttpStatus status, String error, String message, WebRequest request, Exception ex) {
-        AppExceptionSource source = resolveSourceFromPath(request.getDescription(false));
-        ErrorMessageTemplate body = new ErrorMessageTemplate(status.value(), error, message, source);
+        ErrorMessageTemplate body = new ErrorMessageTemplate(status.value(), error, message);
         return handleExceptionInternal(ex, body, new HttpHeaders(), status, request);
-    }
-
-    private AppExceptionSource resolveSourceFromPath(String path) {
-        if (path.contains("/clients/")) {
-            return AppExceptionSource.CLIENTS;
-        }
-        return DEFAULT_SOURCE;
     }
 }

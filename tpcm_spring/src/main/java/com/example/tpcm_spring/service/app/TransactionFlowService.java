@@ -152,7 +152,6 @@ public class TransactionFlowService {
         }
 
         limit.setConsumedAmount(limit.getConsumedAmount() + amount);
-        limit.setLastReset(new Timestamp(System.currentTimeMillis()));
         limitRepository.save(limit);
 
         double remainingBalance = limit.getMaxAmountCycle() - limit.getConsumedAmount();

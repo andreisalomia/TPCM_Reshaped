@@ -11,5 +11,4 @@ public class ErrorMessageTemplate {
     private int status;
     private String error;
     private String message;
-    private AppExceptionSource source;
 }

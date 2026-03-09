@@ -1,0 +1,19 @@
+Starting KafkaConsumerApplication v1.0 using Java 25.0.2 with PID 1 (/app/app.jar started by root in /app)
+The following 1 profile is active: "docker"
+Creating WebClient with baseUrl: http://tpcm-spring:8080
+Started KafkaConsumerApplication in 9.767 seconds (process running for 11.007)
+Consumed message from topic customer-updates, of type setBillDay -> {"eventType":"UPDATE_BILL_CYCLE_DAY","customerID":1,"name":null,"type":null,"nrSubscribers":null,"billCycleDay":16,"email":null,"contactNumber":null,"address":null,"changedField":"billCycleDay","oldValue":"15","newValue":"16","timestamp":"2026-03-03T16:00:14","source":"CLIENTS_SERVICE"}
+Found operation type com.example.kafkaconsumer.entity.SetBillDay
+Processing SET_BILL_DAY for customer ID: 1
+Failed to update customer 1 in app DB: 500 Internal Server Error from PUT http://tpcm-spring:8080/api/app/customers/1
+Exception updating customer 1 in app DB: 500 Internal Server Error from PUT http://tpcm-spring:8080/api/app/customers/1
+Successfully processed SET_BILL_DAY for customer ID: 1
+Starting KafkaConsumerApplication v1.0 using Java 25.0.2 with PID 1 (/app/app.jar started by root in /app)
+The following 1 profile is active: "docker"
+Creating WebClient with baseUrl: http://tpcm-spring:8080
+Started KafkaConsumerApplication in 9.33 seconds (process running for 10.639)
+Consumed message from topic customer-updates, of type setBillDay -> {"eventType":"UPDATE_BILL_CYCLE_DAY","customerID":1,"name":null,"type":null,"nrSubscribers":null,"billCycleDay":16,"email":null,"contactNumber":null,"address":null,"changedField":"billCycleDay","oldValue":"16","newValue":"16","timestamp":"2026-03-03T16:12:41","source":"CLIENTS_SERVICE"}
+Found operation type com.example.kafkaconsumer.entity.SetBillDay
+Processing SET_BILL_DAY for customer ID: 1
+Customer 1 updated in app DB
+Finished processing SET_BILL_DAY for customer ID: 1

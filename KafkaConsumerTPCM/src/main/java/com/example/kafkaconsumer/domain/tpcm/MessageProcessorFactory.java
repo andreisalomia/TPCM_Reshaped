@@ -23,6 +23,7 @@ public class MessageProcessorFactory {
     private final CloseUserProcessor closeUserProcessor;
     private final UpdateSubscriberStatusProcessor updateSubscriberStatusProcessor;
     private final UpdateSubscriberCustomerProcessor updateSubscriberCustomerProcessor;
+    private final UpdateCustomerEmailProcessor updateCustomerEmailProcessor;
 
     @SuppressWarnings("unchecked")
     public <T extends BaseTopicEntry> AbstractMessageProcessor<T> getMessageProcessor(Class<T> entry) {
@@ -40,6 +41,7 @@ public class MessageProcessorFactory {
         if (entry.equals(CloseUser.class)) return (AbstractMessageProcessor<T>) closeUserProcessor;
         if (entry.equals(UpdateSubscriberStatus.class)) return (AbstractMessageProcessor<T>) updateSubscriberStatusProcessor;
         if (entry.equals(UpdateSubscriberCustomer.class)) return (AbstractMessageProcessor<T>) updateSubscriberCustomerProcessor;
+        if (entry.equals(UpdateCustomerEmail.class)) return (AbstractMessageProcessor<T>) updateCustomerEmailProcessor;
         return (AbstractMessageProcessor<T>) baseMessageProcessor;
     }
 }

@@ -7,11 +7,8 @@ CREATE TABLE SubscriberAuth (
     displayName      VARCHAR2(255),
     createdAt        TIMESTAMP DEFAULT SYSTIMESTAMP,
     lastLogin        TIMESTAMP,
-    
+    userRole         VARCHAR2(20) DEFAULT 'USER',
+
     CONSTRAINT fk_subauth_subscriber FOREIGN KEY (subscriberID) REFERENCES Subscriber(subscriberID),
     CONSTRAINT uq_provider_user UNIQUE (authProvider, providerUserID)
-);
-
-ALTER TABLE SubscriberAuth ADD (
-    userRole VARCHAR2(20) DEFAULT 'USER'
 );

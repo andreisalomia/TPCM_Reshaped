@@ -42,6 +42,8 @@ PARTITION BY LIST (billCycleDay) (
     PARTITION p_default VALUES (NULL)
 );
 
+ALTER TABLE Customer ADD email VARCHAR2(255);
+
 -- Shortcut to drop all tables
 DROP TABLE  AppUser PURGE;
 DROP TABLE Subscriber PURGE;

@@ -8,6 +8,7 @@ public enum SupportedOperationType {
     updateCustomerName(UpdateCustomerName.class),
     updateCustomerType(UpdateCustomerType.class),
     setBillDay(SetBillDay.class),
+    updateCustomerEmail(UpdateCustomerEmail.class),
     closeCustomer(CloseCustomer.class),
 
     createSubscriber(CreateSubscriber.class),

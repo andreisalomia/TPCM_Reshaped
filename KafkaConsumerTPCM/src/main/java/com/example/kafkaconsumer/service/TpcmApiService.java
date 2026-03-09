@@ -14,14 +14,16 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 public class TpcmApiService {
 
     private final WebClient tpcmWebClient;
+    private final WebClient tpcmClientsWebClient;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public void createCustomer(Long customerID, String name, String type, Integer billCycleDay) {
+    public void createCustomer(Long customerID, String name, String type, Integer billCycleDay, String email) {
         try {
             ObjectNode customer = objectMapper.createObjectNode();
             customer.put("name", name);
             customer.put("type", type);
             customer.put("billCycleDay", billCycleDay);
+            if (email != null) customer.put("email", email);
 
             tpcmWebClient.post()
                     .uri("/api/app/customers")
@@ -170,6 +172,35 @@ public class TpcmApiService {
         }
     }
 
+    public void updateCustomerEmail(Long customerId, String email) {
+        try {
+            String customerJson = tpcmWebClient.get()
+                    .uri("/api/app/customers/{id}", customerId)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+
+            if (customerJson == null) {
+                log.error("Customer {} not found in app DB", customerId);
+                return;
+            }
+
+            ObjectNode customer = (ObjectNode) objectMapper.readTree(customerJson);
+            customer.put("email", email);
+
+            tpcmWebClient.put()
+                .uri("/api/app/customers/{id}", customerId)
+                .bodyValue(customer)
+                .retrieve()
+                .bodyToMono(String.class)
+                .doOnSuccess(response -> log.info("Customer {} email updated in app DB", customerId))
+                .doOnError(error -> log.error("Failed to update email for customer {}: {}", customerId, error.getMessage()))
+                .block();
+        } catch (Exception e) {
+            log.error("Exception updating email for customer {}: {}", customerId, e.getMessage());
+        }
+}
+
     public void deleteSubscriber(Long subscriberId) {
         try {
             String subscriberJson = tpcmWebClient.get()
@@ -269,8 +300,8 @@ public class TpcmApiService {
 
     public void importCustomerFromClients(Long customerId) {
         try {
-            String clientsCustomerJson = tpcmWebClient.get()
-                    .uri("/api/clients/customers/{id}", customerId)
+                String clientsCustomerJson = tpcmClientsWebClient.get()
+            .uri("/api/clients/customers/{id}", customerId)
                     .retrieve()
                     .bodyToMono(String.class)
                     .block();
@@ -287,6 +318,8 @@ public class TpcmApiService {
             appCustomer.put("type", clientsCustomer.get("type").asText());
             appCustomer.put("billCycleDay", clientsCustomer.get("billCycleDay").asInt());
             appCustomer.put("nrSubscribers", clientsCustomer.has("nrSubscribers") ? clientsCustomer.get("nrSubscribers").asInt() : 0);
+            if (clientsCustomer.has("email") && !clientsCustomer.get("email").isNull())
+                appCustomer.put("email", clientsCustomer.get("email").asText());
 
             String response = tpcmWebClient.post()
                     .uri("/api/app/customers")
@@ -309,7 +342,7 @@ public class TpcmApiService {
 
     public void importSubscriberFromClients(Long subscriberId) {
         try {
-            String clientsSubscriberJson = tpcmWebClient.get()
+            String clientsSubscriberJson = tpcmClientsWebClient.get()
                     .uri("/api/clients/subscribers/{id}", subscriberId)
                     .retrieve()
                     .bodyToMono(String.class)
@@ -365,11 +398,11 @@ public class TpcmApiService {
 
     public void importUserFromClients(Long userId) {
         try {
-            String clientsUserJson = tpcmWebClient.get()
-                    .uri("/api/clients/users/{id}", userId)
-                    .retrieve()
-                    .bodyToMono(String.class)
-                    .block();
+            String clientsUserJson = tpcmClientsWebClient.get()
+                .uri("/api/clients/users/{id}", userId)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
 
             if (clientsUserJson == null) {
                 log.error("User {} not found in clients DB", userId);

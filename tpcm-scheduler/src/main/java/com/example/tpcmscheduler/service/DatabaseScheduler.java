@@ -1,6 +1,5 @@
 package com.example.tpcmscheduler.service;
 
-import com.example.tpcmscheduler.util.ScheduleConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;

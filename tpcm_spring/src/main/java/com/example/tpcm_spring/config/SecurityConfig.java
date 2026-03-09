@@ -17,8 +17,8 @@ public class SecurityConfig {
 
     private final OAuthSuccessHandler oAuthSuccessHandler;
 
-    public SecurityConfig(OAuthSuccessHandler oAuth2SuccessHandler) {
-        this.oAuthSuccessHandler = oAuth2SuccessHandler;
+    public SecurityConfig(OAuthSuccessHandler oAuthSuccessHandler) {
+        this.oAuthSuccessHandler = oAuthSuccessHandler;
     }
 
     @Bean
@@ -31,7 +31,6 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/app/chatbot/**").permitAll()
                         .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
-
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")

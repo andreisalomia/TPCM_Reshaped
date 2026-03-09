@@ -40,6 +40,9 @@ public class Customer {
     @Column(name = "BILLCYCLEDAY", nullable = false)
     private Integer billCycleDay;
 
+    @Column(name = "EMAIL")
+    private String email;
+
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Subscriber> subscribers;
 }

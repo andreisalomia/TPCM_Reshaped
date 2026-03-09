@@ -21,12 +21,13 @@ public class CreateCustomerProcessor extends AbstractMessageProcessor<CreateCust
     public void process(CreateCustomer createCustomer) {
         log.info("Processing CREATE_CUSTOMER for customer ID: {}", createCustomer.getCustomerID());
 
-        tpcmApiService.createCustomer(
-                createCustomer.getCustomerID(),
-                createCustomer.getName(),
-                createCustomer.getType(),
-                createCustomer.getBillCycleDay()
-        );
+    tpcmApiService.createCustomer(
+        createCustomer.getCustomerID(),
+        createCustomer.getName(),
+        createCustomer.getType(),
+        createCustomer.getBillCycleDay(),
+        createCustomer.getEmail()
+    );
 
         log.info("Finished processing CREATE_CUSTOMER for customer ID: {}", createCustomer.getCustomerID());
     }

@@ -30,13 +30,36 @@ public class TpcmApiConfig {
 
     @Bean
     public WebClient tpcmWebClient() {
-        log.info("Creating WebClient with baseUrl: {}", baseUrl);
+        log.info("Creating TPCM WebClient with baseUrl: {}", baseUrl);
 
         String auth = username + ":" + password;
         String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
 
         return WebClient.builder()
                 .baseUrl(baseUrl)
+                .defaultHeader(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .build();
+    }
+
+    @Value("${tpcm.clients.base-url}")
+    private String clientsBaseUrl;
+
+    @Value("${tpcm.clients.username}")
+    private String clientsUsername;
+
+    @Value("${tpcm.clients.password}")
+    private String clientsPassword;
+
+    @Bean
+    public WebClient tpcmClientsWebClient() {
+        log.info("Creating Clients WebClient with baseUrl: {}", clientsBaseUrl);
+
+        String auth = clientsUsername + ":" + clientsPassword;
+        String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
+
+        return WebClient.builder()
+                .baseUrl(clientsBaseUrl)
                 .defaultHeader(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();

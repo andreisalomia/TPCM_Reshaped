@@ -102,6 +102,32 @@ services:
       - tpcm-network
     restart: on-failure:5
 
+  tpcm-clients:
+    build:
+      context: ./tpcm_clients
+      dockerfile: Dockerfile
+    container_name: tpcm-clients
+    healthcheck:
+      test: ["CMD-SHELL", "busybox wget -q -O - http://localhost:8081/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 90s
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    volumes:
+      - ./tpcm_clients/logs:/app/logs
+    depends_on:
+      oracle:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    networks:
+      - tpcm-network
+    restart: on-failure:5
+
   kafka-consumer:
     build:
       context: ./KafkaConsumerTPCM
@@ -119,6 +145,8 @@ services:
       kafka:
         condition: service_healthy
       tpcm-spring:
+        condition: service_healthy
+      tpcm-clients:
         condition: service_healthy
     networks:
       - tpcm-network
