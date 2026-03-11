@@ -9,16 +9,16 @@ import java.util.Properties;
 
 public class DataSourceUtil {
 
-    public static DataSource createHikariDataSource(DataSourceProperties props, String poolName, Properties sessionProps) {
+    public static DataSource createHikariDataSource(DataSourceProperties props, String poolName, Properties sessionProps, int minIdle, int maxPoolSize, String connectionTestQuery) {
         HikariConfig config = new HikariConfig();
 
         config.setJdbcUrl(props.getUrl());
         config.setUsername(props.getUsername());
         config.setPassword(props.getPassword());
-        config.setDriverClassName(HikariConstants.DRIVER_CLASS_NAME);
-        config.setMinimumIdle(HikariConstants.MINIMUM_IDLE);
-        config.setMaximumPoolSize(HikariConstants.MAXIMUM_POOL_SIZE);
-        config.setConnectionTestQuery(HikariConstants.CONNECTION_TEST_QUERY);
+        config.setDriverClassName(props.getDriverClassName());
+        config.setMinimumIdle(minIdle);
+        config.setMaximumPoolSize(maxPoolSize);
+        config.setConnectionTestQuery(connectionTestQuery);
         config.setPoolName(poolName);
 
         if (sessionProps != null) {

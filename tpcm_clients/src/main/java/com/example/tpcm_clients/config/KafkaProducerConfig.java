@@ -20,11 +20,38 @@ public class KafkaProducerConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-    @Value("${spring.kafka.producer.acks:all}")
-    private String acks = "all";
+    @Value("${spring.kafka.producer.acks}")
+    private String acks;
 
-    @Value("${spring.kafka.producer.retries:3}")
-    private int retries = 3;
+    @Value("${spring.kafka.producer.retries}")
+    private int retries;
+
+    @Value("${kafka.topics.customer-updates}")
+    private String customerUpdatesTopic;
+
+    @Value("${kafka.topics.subscriber-updates}")
+    private String subscriberUpdatesTopic;
+
+    @Value("${kafka.topics.user-updates}")
+    private String userUpdatesTopic;
+
+    @Value("${kafka.topics.customer-updates.partitions}")
+    private int customerPartitions;
+
+    @Value("${kafka.topics.subscriber-updates.partitions}")
+    private int subscriberPartitions;
+
+    @Value("${kafka.topics.user-updates.partitions}")
+    private int userPartitions;
+
+    @Value("${kafka.topics.customer-updates.replication-factor}")
+    private short customerReplicationFactor;
+
+    @Value("${kafka.topics.subscriber-updates.replication-factor}")
+    private short subscriberReplicationFactor;
+
+    @Value("${kafka.topics.user-updates.replication-factor}")
+    private short userReplicationFactor;
 
     @Bean
     public ProducerFactory<String, Object> producerFactory() {
@@ -32,10 +59,8 @@ public class KafkaProducerConfig {
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-
         props.put(ProducerConfig.ACKS_CONFIG, acks);
         props.put(ProducerConfig.RETRIES_CONFIG, retries);
-
         return new DefaultKafkaProducerFactory<>(props);
     }
 
@@ -46,16 +71,16 @@ public class KafkaProducerConfig {
 
     @Bean
     public NewTopic customerUpdatesTopic() {
-        return new NewTopic("customer-updates", 3, (short) 1);
+        return new NewTopic(customerUpdatesTopic, customerPartitions, customerReplicationFactor);
     }
 
     @Bean
     public NewTopic subscriberUpdatesTopic() {
-        return new NewTopic("subscriber-updates", 3, (short) 1);
+        return new NewTopic(subscriberUpdatesTopic, subscriberPartitions, subscriberReplicationFactor);
     }
 
     @Bean
     public NewTopic userUpdatesTopic() {
-        return new NewTopic("user-updates", 3, (short) 1);
+        return new NewTopic(userUpdatesTopic, userPartitions, userReplicationFactor);
     }
 }

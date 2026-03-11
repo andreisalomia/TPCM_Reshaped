@@ -18,20 +18,27 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Value("${app.init.admin.username}") private String adminUsername;
+    @Value("${app.init.admin.password}") private String adminPassword;
+    @Value("${app.init.default-user.username}") private String defaultUsername;
+    @Value("${app.init.default-user.password}") private String defaultPassword;
+    @Value("${app.init.default-user.role}") private String defaultUserRole;
+    @Value("${app.init.default-admin.role}") private String defaultAdminRole;
+
     @Override
     public void run(String... args) throws Exception {
         if (userRepository.count() == 0) {
             AppUser adminUser = new AppUser();
-            adminUser.setUsername("admin");
-            adminUser.setPasswordHash(passwordEncoder.encode("admin"));
-            adminUser.setRole("ADMIN");
+            adminUser.setUsername(adminUsername);
+            adminUser.setPasswordHash(passwordEncoder.encode(adminPassword));
+            adminUser.setRole(defaultAdminRole);
             adminUser.setCreatedAt(LocalDateTime.now());
             userRepository.save(adminUser);
 
             AppUser defaultUser = new AppUser();
-            defaultUser.setUsername("user");
-            defaultUser.setPasswordHash(passwordEncoder.encode("user"));
-            defaultUser.setRole("USER");
+            defaultUser.setUsername(defaultUsername);
+            defaultUser.setPasswordHash(passwordEncoder.encode(defaultPassword));
+            defaultUser.setRole(defaultUserRole);
             defaultUser.setCreatedAt(LocalDateTime.now());
             userRepository.save(defaultUser);
         }

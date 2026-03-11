@@ -25,6 +25,15 @@ import java.util.Objects;
 )
 public class ClientsDataSourceConfig {
 
+    @Value("${hikari.minimum-idle}")
+    private int minIdle;
+
+    @Value("${hikari.maximum-pool-size}")
+    private int maxPoolSize;
+
+    @Value("${hikari.connection-test-query}")
+    private String connectionTestQuery;
+
     @Bean
     @ConfigurationProperties("clients.datasource")
     public DataSourceProperties clientsDataSourceProperties() {
@@ -36,7 +45,10 @@ public class ClientsDataSourceConfig {
         return DataSourceUtil.createHikariDataSource(
                 clientsDataSourceProperties(),
                 "HikariPool-clients",
-                null
+                null,
+                minIdle,
+                maxPoolSize,
+                connectionTestQuery
         );
     }
 

@@ -13,23 +13,25 @@ import java.util.Arrays;
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
 
+    @Value("${cors.allowed-origins}") private String[] allowedOrigins;
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
-                .allowedOrigins("http://localhost:3000", "http://127.0.0.1:3000")
+                .allowedOrigins(allowedOrigins)
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
                 .allowedHeaders("*")
                 .allowCredentials(true);
 
         registry.addMapping("/oauth2/**")
-                .allowedOrigins("http://localhost:3000", "http://127.0.0.1:3000")
+                .allowedOrigins(allowedOrigins)
                 .allowedMethods("GET", "POST", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true)
                 .maxAge(3600);
 
         registry.addMapping("/login/oauth2/**")
-                .allowedOrigins("http://localhost:3000", "http://127.0.0.1:3000")
+                .allowedOrigins(allowedOrigins)
                 .allowedMethods("GET", "POST", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true)
@@ -40,7 +42,7 @@ public class CorsConfig implements WebMvcConfigurer {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://127.0.0.1:3000"));
+        configuration.setAllowedOrigins(Arrays.asList(allowedOrigins));
 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH"));
 
