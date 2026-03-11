@@ -1,0 +1,4 @@
+2026-03-11 16:25:33.759|getTransactionsForMsisdn|+40744340284|200|0|+40744340284
+2026-03-11 16:25:59.748|getSubscriberAvailableBalance|+40744340284|200|0|+40744340284|1|245.32|300|54.680000000000014
+2026-03-11 16:27:12.245|updateCustomerAddress|1|200|0|1|Melinesti 16|Melinesti 16A
+2026-03-11 16:27:54.749|updateCustomerAddress|1|200|0|1|Melinesti 16A|Melinesti 16

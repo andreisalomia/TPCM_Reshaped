@@ -30,7 +30,7 @@ public class ChatbotController {
 
     private final MeterRegistry meterRegistry;
 
-    private static final String CDR_LOG_PATH = "logs/cdr.log";
+    private static final String CDR_LOG_PATH = "cdr/cdr.log";
     private static final int MAX_LOG_LINES = 1000;
 
     @GetMapping("/search-by-name")

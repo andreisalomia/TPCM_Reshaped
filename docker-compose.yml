@@ -93,6 +93,7 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
     volumes:
       - ./tpcm_spring/logs:/app/logs
+      - ./cdr:/app/cdr
     depends_on:
       oracle:
         condition: service_healthy
@@ -119,6 +120,7 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
     volumes:
       - ./tpcm_clients/logs:/app/logs
+      - ./cdr:/app/cdr
     depends_on:
       oracle:
         condition: service_healthy

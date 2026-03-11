@@ -2,10 +2,10 @@ package com.example.tpcm_clients.service.clients;
 
 import com.example.tpcm_clients.exceptions.NotFoundException;
 import com.example.tpcm_clients.exceptions.ValidationException;
-//import com.example.tpcm_spring.cdr.CdrBuilder;
-//import com.example.tpcm_spring.cdr.CdrInternalResult;
-//import com.example.tpcm_spring.cdr.CdrLogger;
-//import com.example.tpcm_spring.cdr.CdrOperation;
+import com.example.tpcm_clients.cdr.CdrBuilder;
+import com.example.tpcm_clients.cdr.CdrInternalResult;
+import com.example.tpcm_clients.cdr.CdrLogger;
+import com.example.tpcm_clients.cdr.CdrOperation;
 import com.example.tpcm_clients.kafka.producer.KafkaProducerService;
 import com.example.tpcm_clients.models.clients.Customer;
 import com.example.tpcm_clients.repository.clients.CustomerRepositoryClients;
@@ -25,7 +25,7 @@ public class CustomerServiceClients {
 
     private final CustomerRepositoryClients customerRepository;
     private final KafkaProducerService kafkaProducerService;
-//    private final CdrLogger cdrLogger;
+   private final CdrLogger cdrLogger;
 
     private static final List<String> VALID_TYPES = Arrays.asList("Individual", "SME", "Large Enterprise");
 
@@ -84,41 +84,41 @@ public class CustomerServiceClients {
             kafkaProducerService.publishCustomerCreated(savedCustomer);
             log.info("Customer created with ID: {}", savedCustomer.getCustomerID());
 
-//            cdrLogger.logCdr(CdrOperation.CREATE_CUSTOMER,
-//                    savedCustomer.getCustomerID().toString(),
-//                    201,
-//                    CdrInternalResult.SUCCESS,
-//                    CdrBuilder.buildCreateCustomerSection(savedCustomer.getCustomerID(), savedCustomer.getName(),
-//                            savedCustomer.getType(), savedCustomer.getBillCycleDay(), savedCustomer.getEmail(),
-//                            savedCustomer.getContactNumber(), savedCustomer.getAddress()));
+           cdrLogger.logCdr(CdrOperation.CREATE_CUSTOMER,
+                   savedCustomer.getCustomerID().toString(),
+                   201,
+                   CdrInternalResult.SUCCESS,
+                   CdrBuilder.buildCreateCustomerSection(savedCustomer.getCustomerID(), savedCustomer.getName(),
+                           savedCustomer.getType(), savedCustomer.getBillCycleDay(), savedCustomer.getEmail(),
+                           savedCustomer.getContactNumber(), savedCustomer.getAddress()));
             return savedCustomer;
         } catch (ValidationException ex) {
-//            cdrLogger.logCdr(CdrOperation.CREATE_CUSTOMER,
-//                    customer != null && customer.getCustomerID() != null ? customer.getCustomerID().toString() : "UNKNOWN",
-//                    400,
-//                    CdrInternalResult.VALIDATION_FAILED,
-//                    CdrBuilder.buildCreateCustomerSection(
-//                            customer != null ? customer.getCustomerID() : null,
-//                            customer != null ? customer.getName() : null,
-//                            customer != null ? customer.getType() : null,
-//                            customer != null ? customer.getBillCycleDay() : null,
-//                            customer != null ? customer.getEmail() : null,
-//                            customer != null ? customer.getContactNumber() : null,
-//                            customer != null ? customer.getAddress() : null));
+           cdrLogger.logCdr(CdrOperation.CREATE_CUSTOMER,
+                   customer != null && customer.getCustomerID() != null ? customer.getCustomerID().toString() : "UNKNOWN",
+                   400,
+                   CdrInternalResult.VALIDATION_FAILED,
+                   CdrBuilder.buildCreateCustomerSection(
+                           customer != null ? customer.getCustomerID() : null,
+                           customer != null ? customer.getName() : null,
+                           customer != null ? customer.getType() : null,
+                           customer != null ? customer.getBillCycleDay() : null,
+                           customer != null ? customer.getEmail() : null,
+                           customer != null ? customer.getContactNumber() : null,
+                           customer != null ? customer.getAddress() : null));
             throw ex;
         } catch (RuntimeException ex) {
-//            cdrLogger.logCdr(CdrOperation.CREATE_CUSTOMER,
-//                    customer != null && customer.getCustomerID() != null ? customer.getCustomerID().toString() : "UNKNOWN",
-//                    500,
-//                    CdrInternalResult.GENERIC_ERROR,
-//                    CdrBuilder.buildCreateCustomerSection(
-//                            customer != null ? customer.getCustomerID() : null,
-//                            customer != null ? customer.getName() : null,
-//                            customer != null ? customer.getType() : null,
-//                            customer != null ? customer.getBillCycleDay() : null,
-//                            customer != null ? customer.getEmail() : null,
-//                            customer != null ? customer.getContactNumber() : null,
-//                            customer != null ? customer.getAddress() : null));
+           cdrLogger.logCdr(CdrOperation.CREATE_CUSTOMER,
+                   customer != null && customer.getCustomerID() != null ? customer.getCustomerID().toString() : "UNKNOWN",
+                   500,
+                   CdrInternalResult.GENERIC_ERROR,
+                   CdrBuilder.buildCreateCustomerSection(
+                           customer != null ? customer.getCustomerID() : null,
+                           customer != null ? customer.getName() : null,
+                           customer != null ? customer.getType() : null,
+                           customer != null ? customer.getBillCycleDay() : null,
+                           customer != null ? customer.getEmail() : null,
+                           customer != null ? customer.getContactNumber() : null,
+                           customer != null ? customer.getAddress() : null));
             throw ex;
         }
     }
@@ -128,21 +128,21 @@ public class CustomerServiceClients {
         try {
             validateCustomerName(newName);
         } catch (ValidationException ex) {
-//            cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_NAME,
-//                    id != null ? id.toString() : "UNKNOWN",
-//                    400,
-//                    CdrInternalResult.VALIDATION_FAILED,
-//                    CdrBuilder.buildUpdateCustomerNameSection(id, null, newName));
+           cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_NAME,
+                   id != null ? id.toString() : "UNKNOWN",
+                   400,
+                   CdrInternalResult.VALIDATION_FAILED,
+                   CdrBuilder.buildUpdateCustomerNameSection(id, null, newName));
             throw ex;
         }
 
         Optional<Customer> optional = customerRepository.findById(id);
         if (optional.isEmpty()) {
-//            cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_NAME,
-//                    id != null ? id.toString() : "UNKNOWN",
-//                    404,
-//                    CdrInternalResult.CUSTOMER_NOT_FOUND,
-//                    CdrBuilder.buildUpdateCustomerNameSection(id, null, newName));
+           cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_NAME,
+                   id != null ? id.toString() : "UNKNOWN",
+                   404,
+                   CdrInternalResult.CUSTOMER_NOT_FOUND,
+                   CdrBuilder.buildUpdateCustomerNameSection(id, null, newName));
             return Optional.empty();
         }
 
@@ -154,11 +154,11 @@ public class CustomerServiceClients {
             kafkaProducerService.publishCustomerNameUpdate(id, oldName, newName);
             log.info("Updated customer name for ID {}: {} -> {}", id, oldName, newName);
 
-//            cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_NAME,
-//                    id.toString(),
-//                    200,
-//                    CdrInternalResult.SUCCESS,
-//                    CdrBuilder.buildUpdateCustomerNameSection(id, oldName, newName));
+           cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_NAME,
+                   id.toString(),
+                   200,
+                   CdrInternalResult.SUCCESS,
+                   CdrBuilder.buildUpdateCustomerNameSection(id, oldName, newName));
             return saved;
         });
     }
@@ -168,21 +168,21 @@ public class CustomerServiceClients {
         try {
             validateCustomerType(newType);
         } catch (ValidationException ex) {
-//            cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_TYPE,
-//                    id != null ? id.toString() : "UNKNOWN",
-//                    400,
-//                    CdrInternalResult.VALIDATION_FAILED,
-//                    CdrBuilder.buildUpdateCustomerTypeSection(id, null, newType));
+           cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_TYPE,
+                   id != null ? id.toString() : "UNKNOWN",
+                   400,
+                   CdrInternalResult.VALIDATION_FAILED,
+                   CdrBuilder.buildUpdateCustomerTypeSection(id, null, newType));
             throw ex;
         }
 
         Optional<Customer> optional = customerRepository.findById(id);
         if (optional.isEmpty()) {
-//            cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_TYPE,
-//                    id != null ? id.toString() : "UNKNOWN",
-//                    404,
-//                    CdrInternalResult.CUSTOMER_NOT_FOUND,
-//                    CdrBuilder.buildUpdateCustomerTypeSection(id, null, newType));
+           cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_TYPE,
+                   id != null ? id.toString() : "UNKNOWN",
+                   404,
+                   CdrInternalResult.CUSTOMER_NOT_FOUND,
+                   CdrBuilder.buildUpdateCustomerTypeSection(id, null, newType));
             return Optional.empty();
         }
 
@@ -194,11 +194,11 @@ public class CustomerServiceClients {
             kafkaProducerService.publishCustomerTypeUpdate(id, oldType, newType);
             log.info("Updated customer type for ID {}: {} -> {}", id, oldType, newType);
 
-//            cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_TYPE,
-//                    id.toString(),
-//                    200,
-//                    CdrInternalResult.SUCCESS,
-//                    CdrBuilder.buildUpdateCustomerTypeSection(id, oldType, newType));
+           cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_TYPE,
+                   id.toString(),
+                   200,
+                   CdrInternalResult.SUCCESS,
+                   CdrBuilder.buildUpdateCustomerTypeSection(id, oldType, newType));
             return saved;
         });
     }
@@ -208,21 +208,21 @@ public class CustomerServiceClients {
         try {
             validateBillCycleDay(newBillCycleDay);
         } catch (ValidationException ex) {
-//            cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_BILL_CYCLE_DAY,
-//                    id != null ? id.toString() : "UNKNOWN",
-//                    400,
-//                    CdrInternalResult.VALIDATION_FAILED,
-//                    CdrBuilder.buildUpdateCustomerBillCycleDaySection(id, null, newBillCycleDay));
+           cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_BILL_CYCLE_DAY,
+                   id != null ? id.toString() : "UNKNOWN",
+                   400,
+                   CdrInternalResult.VALIDATION_FAILED,
+                   CdrBuilder.buildUpdateCustomerBillCycleDaySection(id, null, newBillCycleDay));
             throw ex;
         }
 
         Optional<Customer> optional = customerRepository.findById(id);
         if (optional.isEmpty()) {
-//            cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_BILL_CYCLE_DAY,
-//                    id != null ? id.toString() : "UNKNOWN",
-//                    404,
-//                    CdrInternalResult.CUSTOMER_NOT_FOUND,
-//                    CdrBuilder.buildUpdateCustomerBillCycleDaySection(id, null, newBillCycleDay));
+           cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_BILL_CYCLE_DAY,
+                   id != null ? id.toString() : "UNKNOWN",
+                   404,
+                   CdrInternalResult.CUSTOMER_NOT_FOUND,
+                   CdrBuilder.buildUpdateCustomerBillCycleDaySection(id, null, newBillCycleDay));
             return Optional.empty();
         }
 
@@ -234,11 +234,11 @@ public class CustomerServiceClients {
             kafkaProducerService.publishCustomerBillCycleDayUpdate(id, oldBillCycleDay, newBillCycleDay);
             log.info("Updated bill cycle day for customer ID {}: {} -> {}", id, oldBillCycleDay, newBillCycleDay);
 
-//            cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_BILL_CYCLE_DAY,
-//                    id.toString(),
-//                    200,
-//                    CdrInternalResult.SUCCESS,
-//                    CdrBuilder.buildUpdateCustomerBillCycleDaySection(id, oldBillCycleDay, newBillCycleDay));
+           cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_BILL_CYCLE_DAY,
+                   id.toString(),
+                   200,
+                   CdrInternalResult.SUCCESS,
+                   CdrBuilder.buildUpdateCustomerBillCycleDaySection(id, oldBillCycleDay, newBillCycleDay));
             return saved;
         });
     }
@@ -248,21 +248,21 @@ public class CustomerServiceClients {
         try {
             validateContactNumber(newContactNumber);
         } catch (ValidationException ex) {
-//            cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_CONTACT_NUMBER,
-//                    id != null ? id.toString() : "UNKNOWN",
-//                    400,
-//                    CdrInternalResult.VALIDATION_FAILED,
-//                    CdrBuilder.buildUpdateCustomerContactNumberSection(id, null, newContactNumber));
+           cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_CONTACT_NUMBER,
+                   id != null ? id.toString() : "UNKNOWN",
+                   400,
+                   CdrInternalResult.VALIDATION_FAILED,
+                   CdrBuilder.buildUpdateCustomerContactNumberSection(id, null, newContactNumber));
             throw ex;
         }
 
         Optional<Customer> optional = customerRepository.findById(id);
         if (optional.isEmpty()) {
-//            cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_CONTACT_NUMBER,
-//                    id != null ? id.toString() : "UNKNOWN",
-//                    404,
-//                    CdrInternalResult.CUSTOMER_NOT_FOUND,
-//                    CdrBuilder.buildUpdateCustomerContactNumberSection(id, null, newContactNumber));
+           cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_CONTACT_NUMBER,
+                   id != null ? id.toString() : "UNKNOWN",
+                   404,
+                   CdrInternalResult.CUSTOMER_NOT_FOUND,
+                   CdrBuilder.buildUpdateCustomerContactNumberSection(id, null, newContactNumber));
             return Optional.empty();
         }
 
@@ -273,11 +273,11 @@ public class CustomerServiceClients {
 
             log.info("Updated contact number for customer ID {}: {} -> {}", id, oldContactNumber, newContactNumber);
 
-//            cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_CONTACT_NUMBER,
-//                    id.toString(),
-//                    200,
-//                    CdrInternalResult.SUCCESS,
-//                    CdrBuilder.buildUpdateCustomerContactNumberSection(id, oldContactNumber, newContactNumber));
+           cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_CONTACT_NUMBER,
+                   id.toString(),
+                   200,
+                   CdrInternalResult.SUCCESS,
+                   CdrBuilder.buildUpdateCustomerContactNumberSection(id, oldContactNumber, newContactNumber));
             return saved;
         });
     }
@@ -287,21 +287,21 @@ public class CustomerServiceClients {
         try {
             validateEmail(newEmail);
         } catch (ValidationException ex) {
-//            cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_EMAIL,
-//                    id != null ? id.toString() : "UNKNOWN",
-//                    400,
-//                    CdrInternalResult.VALIDATION_FAILED,
-//                    CdrBuilder.buildUpdateCustomerEmailSection(id, null, newEmail));
+           cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_EMAIL,
+                   id != null ? id.toString() : "UNKNOWN",
+                   400,
+                   CdrInternalResult.VALIDATION_FAILED,
+                   CdrBuilder.buildUpdateCustomerEmailSection(id, null, newEmail));
             throw ex;
         }
 
         Optional<Customer> optional = customerRepository.findById(id);
         if (optional.isEmpty()) {
-//            cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_EMAIL,
-//                    id != null ? id.toString() : "UNKNOWN",
-//                    404,
-//                    CdrInternalResult.CUSTOMER_NOT_FOUND,
-//                    CdrBuilder.buildUpdateCustomerEmailSection(id, null, newEmail));
+           cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_EMAIL,
+                   id != null ? id.toString() : "UNKNOWN",
+                   404,
+                   CdrInternalResult.CUSTOMER_NOT_FOUND,
+                   CdrBuilder.buildUpdateCustomerEmailSection(id, null, newEmail));
             return Optional.empty();
         }
 
@@ -314,11 +314,11 @@ public class CustomerServiceClients {
 
             log.info("Updated email for customer ID {}: {} -> {}", id, oldEmail, newEmail);
 
-//            cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_EMAIL,
-//                    id.toString(),
-//                    200,
-//                    CdrInternalResult.SUCCESS,
-//                    CdrBuilder.buildUpdateCustomerEmailSection(id, oldEmail, newEmail));
+           cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_EMAIL,
+                   id.toString(),
+                   200,
+                   CdrInternalResult.SUCCESS,
+                   CdrBuilder.buildUpdateCustomerEmailSection(id, oldEmail, newEmail));
             return saved;
         });
     }
@@ -328,21 +328,21 @@ public class CustomerServiceClients {
         try {
             validateAddress(newAddress);
         } catch (ValidationException ex) {
-//            cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_ADDRESS,
-//                    id != null ? id.toString() : "UNKNOWN",
-//                    400,
-//                    CdrInternalResult.VALIDATION_FAILED,
-//                    CdrBuilder.buildUpdateCustomerAddressSection(id, null, newAddress));
+           cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_ADDRESS,
+                   id != null ? id.toString() : "UNKNOWN",
+                   400,
+                   CdrInternalResult.VALIDATION_FAILED,
+                   CdrBuilder.buildUpdateCustomerAddressSection(id, null, newAddress));
             throw ex;
         }
 
         Optional<Customer> optional = customerRepository.findById(id);
         if (optional.isEmpty()) {
-//            cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_ADDRESS,
-//                    id != null ? id.toString() : "UNKNOWN",
-//                    404,
-//                    CdrInternalResult.CUSTOMER_NOT_FOUND,
-//                    CdrBuilder.buildUpdateCustomerAddressSection(id, null, newAddress));
+           cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_ADDRESS,
+                   id != null ? id.toString() : "UNKNOWN",
+                   404,
+                   CdrInternalResult.CUSTOMER_NOT_FOUND,
+                   CdrBuilder.buildUpdateCustomerAddressSection(id, null, newAddress));
             return Optional.empty();
         }
 
@@ -353,11 +353,11 @@ public class CustomerServiceClients {
 
             log.info("Updated address for customer ID {}: {} -> {}", id, oldAddress, newAddress);
 
-//            cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_ADDRESS,
-//                    id.toString(),
-//                    200,
-//                    CdrInternalResult.SUCCESS,
-//                    CdrBuilder.buildUpdateCustomerAddressSection(id, oldAddress, newAddress));
+           cdrLogger.logCdr(CdrOperation.UPDATE_CUSTOMER_ADDRESS,
+                   id.toString(),
+                   200,
+                   CdrInternalResult.SUCCESS,
+                   CdrBuilder.buildUpdateCustomerAddressSection(id, oldAddress, newAddress));
             return saved;
         });
     }
@@ -377,22 +377,22 @@ public class CustomerServiceClients {
     public boolean deleteCustomer(Long id) {
         if (!customerRepository.existsById(id)) {
             log.warn("Attempt to delete non-existing customer with ID: {}", id);
-//            cdrLogger.logCdr(CdrOperation.DELETE_CUSTOMER,
-//                    id != null ? id.toString() : "UNKNOWN",
-//                    404,
-//                    CdrInternalResult.CUSTOMER_NOT_FOUND,
-//                    CdrBuilder.buildDeleteCustomerSection(id, null));
+           cdrLogger.logCdr(CdrOperation.DELETE_CUSTOMER,
+                   id != null ? id.toString() : "UNKNOWN",
+                   404,
+                   CdrInternalResult.CUSTOMER_NOT_FOUND,
+                   CdrBuilder.buildDeleteCustomerSection(id, null));
             return false;
         }
         customerRepository.deleteById(id);
         kafkaProducerService.publishCustomerDeleted(id);
         log.info("Deleted customer with ID: {}", id);
 
-//        cdrLogger.logCdr(CdrOperation.DELETE_CUSTOMER,
-//                id.toString(),
-//                204,
-//                CdrInternalResult.SUCCESS,
-//                CdrBuilder.buildDeleteCustomerSection(id, null));
+       cdrLogger.logCdr(CdrOperation.DELETE_CUSTOMER,
+               id.toString(),
+               204,
+               CdrInternalResult.SUCCESS,
+               CdrBuilder.buildDeleteCustomerSection(id, null));
         return true;
     }
 

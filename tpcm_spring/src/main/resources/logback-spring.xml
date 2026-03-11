@@ -9,7 +9,7 @@
     </appender>
 
     <appender name="cdrFile" class="ch.qos.logback.core.FileAppender">
-        <file>logs/cdr.log</file>
+        <file>cdr/cdr.log</file>
         <append>true</append>
         <encoder>
             <pattern>%msg%n</pattern>

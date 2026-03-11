@@ -3,10 +3,10 @@ package com.example.tpcm_clients.service.clients;
 import com.example.tpcm_clients.exceptions.ConflictException;
 import com.example.tpcm_clients.exceptions.NotFoundException;
 import com.example.tpcm_clients.exceptions.ValidationException;
-//import com.example.tpcm_spring.cdr.CdrBuilder;
-//import com.example.tpcm_spring.cdr.CdrInternalResult;
-//import com.example.tpcm_spring.cdr.CdrLogger;
-//import com.example.tpcm_spring.cdr.CdrOperation;
+import com.example.tpcm_clients.cdr.CdrBuilder;
+import com.example.tpcm_clients.cdr.CdrInternalResult;
+import com.example.tpcm_clients.cdr.CdrLogger;
+import com.example.tpcm_clients.cdr.CdrOperation;
 import com.example.tpcm_clients.kafka.producer.KafkaProducerService;
 import com.example.tpcm_clients.models.clients.Customer;
 import com.example.tpcm_clients.models.clients.Subscriber;
@@ -29,7 +29,7 @@ public class SubscriberServiceClients {
     private final SubscriberRepositoryClients subscriberRepository;
     private final CustomerRepositoryClients customerRepository;
     private final KafkaProducerService kafkaProducerService;
-//    private final CdrLogger cdrLogger;
+   private final CdrLogger cdrLogger;
 
     private static final List<String> VALID_STATUSES = Arrays.asList("ACTIVE", "INACTIVE", "SUSPENDED");
     private static final List<String> VALID_SUBSCRIPTION_TYPES = Arrays.asList("PREPAID", "POSTPAID", "HYBRID");
@@ -80,12 +80,12 @@ public class SubscriberServiceClients {
             s.setCustomer(customer);
 
             if (subscriberRepository.existsByMsisdn(s.getMsisdn())) {
-//                cdrLogger.logCdr(CdrOperation.CREATE_SUBSCRIBER,
-//                        s.getMsisdn(),
-//                        409,
-//                        CdrInternalResult.ALREADY_EXISTS,
-//                        CdrBuilder.buildCreateSubscriberSection(null, s.getMsisdn(), s.getStatus(),
-//                                s.getSubscriptionType(), customerId));
+               cdrLogger.logCdr(CdrOperation.CREATE_SUBSCRIBER,
+                       s.getMsisdn(),
+                       409,
+                       CdrInternalResult.ALREADY_EXISTS,
+                       CdrBuilder.buildCreateSubscriberSection(null, s.getMsisdn(), s.getStatus(),
+                               s.getSubscriptionType(), customerId));
                 throw new ConflictException("A subscriber with this MSISDN already exists");
             }
 
@@ -95,57 +95,57 @@ public class SubscriberServiceClients {
             kafkaProducerService.publishSubscriberCreated(saved);
             log.info("Subscriber created with ID: {}", saved.getSubscriberID());
 
-//            cdrLogger.logCdr(CdrOperation.CREATE_SUBSCRIBER,
-//                    saved.getSubscriberID().toString(),
-//                    201,
-//                    CdrInternalResult.SUCCESS,
-//                    CdrBuilder.buildCreateSubscriberSection(saved.getSubscriberID(), saved.getMsisdn(),
-//                            saved.getStatus(), saved.getSubscriptionType(), customerId));
+           cdrLogger.logCdr(CdrOperation.CREATE_SUBSCRIBER,
+                   saved.getSubscriberID().toString(),
+                   201,
+                   CdrInternalResult.SUCCESS,
+                   CdrBuilder.buildCreateSubscriberSection(saved.getSubscriberID(), saved.getMsisdn(),
+                           saved.getStatus(), saved.getSubscriptionType(), customerId));
 
             return saved;
         } catch (ValidationException ex) {
-//            cdrLogger.logCdr(CdrOperation.CREATE_SUBSCRIBER,
-//                    s != null ? s.getMsisdn() : "UNKNOWN",
-//                    400,
-//                    CdrInternalResult.VALIDATION_FAILED,
-//                    CdrBuilder.buildCreateSubscriberSection(null,
-//                            s != null ? s.getMsisdn() : null,
-//                            s != null ? s.getStatus() : null,
-//                            s != null ? s.getSubscriptionType() : null,
-//                            s != null && s.getCustomer() != null ? s.getCustomer().getCustomerID() : null));
+           cdrLogger.logCdr(CdrOperation.CREATE_SUBSCRIBER,
+                   s != null ? s.getMsisdn() : "UNKNOWN",
+                   400,
+                   CdrInternalResult.VALIDATION_FAILED,
+                   CdrBuilder.buildCreateSubscriberSection(null,
+                           s != null ? s.getMsisdn() : null,
+                           s != null ? s.getStatus() : null,
+                           s != null ? s.getSubscriptionType() : null,
+                           s != null && s.getCustomer() != null ? s.getCustomer().getCustomerID() : null));
             throw ex;
         } catch (ConflictException ex) {
-//            cdrLogger.logCdr(CdrOperation.CREATE_SUBSCRIBER,
-//                    s != null ? s.getMsisdn() : "UNKNOWN",
-//                    409,
-//                    CdrInternalResult.ALREADY_EXISTS,
-//                    CdrBuilder.buildCreateSubscriberSection(null,
-//                            s != null ? s.getMsisdn() : null,
-//                            s != null ? s.getStatus() : null,
-//                            s != null ? s.getSubscriptionType() : null,
-//                            s != null && s.getCustomer() != null ? s.getCustomer().getCustomerID() : null));
+           cdrLogger.logCdr(CdrOperation.CREATE_SUBSCRIBER,
+                   s != null ? s.getMsisdn() : "UNKNOWN",
+                   409,
+                   CdrInternalResult.ALREADY_EXISTS,
+                   CdrBuilder.buildCreateSubscriberSection(null,
+                           s != null ? s.getMsisdn() : null,
+                           s != null ? s.getStatus() : null,
+                           s != null ? s.getSubscriptionType() : null,
+                           s != null && s.getCustomer() != null ? s.getCustomer().getCustomerID() : null));
             throw ex;
         } catch (NotFoundException ex) {
-//            cdrLogger.logCdr(CdrOperation.CREATE_SUBSCRIBER,
-//                    s != null ? s.getMsisdn() : "UNKNOWN",
-//                    404,
-//                    CdrInternalResult.CUSTOMER_NOT_FOUND,
-//                    CdrBuilder.buildCreateSubscriberSection(null,
-//                            s != null ? s.getMsisdn() : null,
-//                            s != null ? s.getStatus() : null,
-//                            s != null ? s.getSubscriptionType() : null,
-//                            s != null && s.getCustomer() != null ? s.getCustomer().getCustomerID() : null));
+           cdrLogger.logCdr(CdrOperation.CREATE_SUBSCRIBER,
+                   s != null ? s.getMsisdn() : "UNKNOWN",
+                   404,
+                   CdrInternalResult.CUSTOMER_NOT_FOUND,
+                   CdrBuilder.buildCreateSubscriberSection(null,
+                           s != null ? s.getMsisdn() : null,
+                           s != null ? s.getStatus() : null,
+                           s != null ? s.getSubscriptionType() : null,
+                           s != null && s.getCustomer() != null ? s.getCustomer().getCustomerID() : null));
             throw ex;
         } catch (RuntimeException ex) {
-//            cdrLogger.logCdr(CdrOperation.CREATE_SUBSCRIBER,
-//                    s != null ? s.getMsisdn() : "UNKNOWN",
-//                    500,
-//                    CdrInternalResult.GENERIC_ERROR,
-//                    CdrBuilder.buildCreateSubscriberSection(null,
-//                            s != null ? s.getMsisdn() : null,
-//                            s != null ? s.getStatus() : null,
-//                            s != null ? s.getSubscriptionType() : null,
-//                            s != null && s.getCustomer() != null ? s.getCustomer().getCustomerID() : null));
+           cdrLogger.logCdr(CdrOperation.CREATE_SUBSCRIBER,
+                   s != null ? s.getMsisdn() : "UNKNOWN",
+                   500,
+                   CdrInternalResult.GENERIC_ERROR,
+                   CdrBuilder.buildCreateSubscriberSection(null,
+                           s != null ? s.getMsisdn() : null,
+                           s != null ? s.getStatus() : null,
+                           s != null ? s.getSubscriptionType() : null,
+                           s != null && s.getCustomer() != null ? s.getCustomer().getCustomerID() : null));
             throw ex;
         }
     }
@@ -155,21 +155,21 @@ public class SubscriberServiceClients {
         try {
             validateMsisdn(newMsisdn);
         } catch (ValidationException ex) {
-//            cdrLogger.logCdr(CdrOperation.UPDATE_SUBSCRIBER_MSISDN,
-//                    id != null ? id.toString() : newMsisdn,
-//                    400,
-//                    CdrInternalResult.VALIDATION_FAILED,
-//                    CdrBuilder.buildUpdateSubscriberMsisdnSection(id, null, newMsisdn));
+           cdrLogger.logCdr(CdrOperation.UPDATE_SUBSCRIBER_MSISDN,
+                   id != null ? id.toString() : newMsisdn,
+                   400,
+                   CdrInternalResult.VALIDATION_FAILED,
+                   CdrBuilder.buildUpdateSubscriberMsisdnSection(id, null, newMsisdn));
             throw ex;
         }
 
         Optional<Subscriber> optional = subscriberRepository.findById(id);
         if (optional.isEmpty()) {
-//            cdrLogger.logCdr(CdrOperation.UPDATE_SUBSCRIBER_MSISDN,
-//                    id != null ? id.toString() : "UNKNOWN",
-//                    404,
-//                    CdrInternalResult.SUBSCRIBER_NOT_FOUND,
-//                    CdrBuilder.buildUpdateSubscriberMsisdnSection(id, null, newMsisdn));
+           cdrLogger.logCdr(CdrOperation.UPDATE_SUBSCRIBER_MSISDN,
+                   id != null ? id.toString() : "UNKNOWN",
+                   404,
+                   CdrInternalResult.SUBSCRIBER_NOT_FOUND,
+                   CdrBuilder.buildUpdateSubscriberMsisdnSection(id, null, newMsisdn));
             return Optional.empty();
         }
 
@@ -177,11 +177,11 @@ public class SubscriberServiceClients {
             String oldMsisdn = subscriber.getMsisdn();
 
             if (!oldMsisdn.equals(newMsisdn) && subscriberRepository.existsByMsisdn(newMsisdn)) {
-//                cdrLogger.logCdr(CdrOperation.UPDATE_SUBSCRIBER_MSISDN,
-//                        id.toString(),
-//                        409,
-//                        CdrInternalResult.ALREADY_EXISTS,
-//                        CdrBuilder.buildUpdateSubscriberMsisdnSection(id, oldMsisdn, newMsisdn));
+               cdrLogger.logCdr(CdrOperation.UPDATE_SUBSCRIBER_MSISDN,
+                       id.toString(),
+                       409,
+                       CdrInternalResult.ALREADY_EXISTS,
+                       CdrBuilder.buildUpdateSubscriberMsisdnSection(id, oldMsisdn, newMsisdn));
                 throw new ConflictException("A subscriber with this MSISDN already exists");
             }
 
@@ -191,11 +191,11 @@ public class SubscriberServiceClients {
             kafkaProducerService.publishSubscriberMsisdnUpdate(id, oldMsisdn, newMsisdn);
             log.info("Updated MSISDN for subscriber ID {}: {} -> {}", id, oldMsisdn, newMsisdn);
 
-//            cdrLogger.logCdr(CdrOperation.UPDATE_SUBSCRIBER_MSISDN,
-//                    id.toString(),
-//                    200,
-//                    CdrInternalResult.SUCCESS,
-//                    CdrBuilder.buildUpdateSubscriberMsisdnSection(id, oldMsisdn, newMsisdn));
+           cdrLogger.logCdr(CdrOperation.UPDATE_SUBSCRIBER_MSISDN,
+                   id.toString(),
+                   200,
+                   CdrInternalResult.SUCCESS,
+                   CdrBuilder.buildUpdateSubscriberMsisdnSection(id, oldMsisdn, newMsisdn));
             return saved;
         });
     }
@@ -205,21 +205,21 @@ public class SubscriberServiceClients {
         try {
             validateStatus(newStatus);
         } catch (ValidationException ex) {
-//            cdrLogger.logCdr(CdrOperation.UPDATE_SUBSCRIBER_STATUS,
-//                    id != null ? id.toString() : "UNKNOWN",
-//                    400,
-//                    CdrInternalResult.VALIDATION_FAILED,
-//                    CdrBuilder.buildUpdateSubscriberStatusSection(id, null, newStatus));
+           cdrLogger.logCdr(CdrOperation.UPDATE_SUBSCRIBER_STATUS,
+                   id != null ? id.toString() : "UNKNOWN",
+                   400,
+                   CdrInternalResult.VALIDATION_FAILED,
+                   CdrBuilder.buildUpdateSubscriberStatusSection(id, null, newStatus));
             throw ex;
         }
 
         Optional<Subscriber> optional = subscriberRepository.findById(id);
         if (optional.isEmpty()) {
-//            cdrLogger.logCdr(CdrOperation.UPDATE_SUBSCRIBER_STATUS,
-//                    id != null ? id.toString() : "UNKNOWN",
-//                    404,
-//                    CdrInternalResult.SUBSCRIBER_NOT_FOUND,
-//                    CdrBuilder.buildUpdateSubscriberStatusSection(id, null, newStatus));
+           cdrLogger.logCdr(CdrOperation.UPDATE_SUBSCRIBER_STATUS,
+                   id != null ? id.toString() : "UNKNOWN",
+                   404,
+                   CdrInternalResult.SUBSCRIBER_NOT_FOUND,
+                   CdrBuilder.buildUpdateSubscriberStatusSection(id, null, newStatus));
             return Optional.empty();
         }
 
@@ -231,11 +231,11 @@ public class SubscriberServiceClients {
             kafkaProducerService.publishSubscriberStatusUpdate(id, oldStatus, newStatus);
             log.info("Updated status for subscriber ID {}: {} -> {}", id, oldStatus, newStatus);
 
-//            cdrLogger.logCdr(CdrOperation.UPDATE_SUBSCRIBER_STATUS,
-//                    id.toString(),
-//                    200,
-//                    CdrInternalResult.SUCCESS,
-//                    CdrBuilder.buildUpdateSubscriberStatusSection(id, oldStatus, newStatus));
+           cdrLogger.logCdr(CdrOperation.UPDATE_SUBSCRIBER_STATUS,
+                   id.toString(),
+                   200,
+                   CdrInternalResult.SUCCESS,
+                   CdrBuilder.buildUpdateSubscriberStatusSection(id, oldStatus, newStatus));
             return saved;
         });
     }
@@ -245,21 +245,21 @@ public class SubscriberServiceClients {
         try {
             validateSubscriptionType(newSubscriptionType);
         } catch (ValidationException ex) {
-//            cdrLogger.logCdr(CdrOperation.UPDATE_SUBSCRIBER_SUBSCRIPTION_TYPE,
-//                    id != null ? id.toString() : "UNKNOWN",
-//                    400,
-//                    CdrInternalResult.VALIDATION_FAILED,
-//                    CdrBuilder.buildUpdateSubscriberSubscriptionTypeSection(id, null, newSubscriptionType));
+           cdrLogger.logCdr(CdrOperation.UPDATE_SUBSCRIBER_SUBSCRIPTION_TYPE,
+                   id != null ? id.toString() : "UNKNOWN",
+                   400,
+                   CdrInternalResult.VALIDATION_FAILED,
+                   CdrBuilder.buildUpdateSubscriberSubscriptionTypeSection(id, null, newSubscriptionType));
             throw ex;
         }
 
         Optional<Subscriber> optional = subscriberRepository.findById(id);
         if (optional.isEmpty()) {
-//            cdrLogger.logCdr(CdrOperation.UPDATE_SUBSCRIBER_SUBSCRIPTION_TYPE,
-//                    id != null ? id.toString() : "UNKNOWN",
-//                    404,
-//                    CdrInternalResult.SUBSCRIBER_NOT_FOUND,
-//                    CdrBuilder.buildUpdateSubscriberSubscriptionTypeSection(id, null, newSubscriptionType));
+           cdrLogger.logCdr(CdrOperation.UPDATE_SUBSCRIBER_SUBSCRIPTION_TYPE,
+                   id != null ? id.toString() : "UNKNOWN",
+                   404,
+                   CdrInternalResult.SUBSCRIBER_NOT_FOUND,
+                   CdrBuilder.buildUpdateSubscriberSubscriptionTypeSection(id, null, newSubscriptionType));
             return Optional.empty();
         }
 
@@ -271,11 +271,11 @@ public class SubscriberServiceClients {
             kafkaProducerService.publishSubscriberSubscriptionTypeUpdate(id, oldSubscriptionType, newSubscriptionType);
             log.info("Updated subscription type for subscriber ID {}: {} -> {}", id, oldSubscriptionType, newSubscriptionType);
 
-//            cdrLogger.logCdr(CdrOperation.UPDATE_SUBSCRIBER_SUBSCRIPTION_TYPE,
-//                    id.toString(),
-//                    200,
-//                    CdrInternalResult.SUCCESS,
-//                    CdrBuilder.buildUpdateSubscriberSubscriptionTypeSection(id, oldSubscriptionType, newSubscriptionType));
+           cdrLogger.logCdr(CdrOperation.UPDATE_SUBSCRIBER_SUBSCRIPTION_TYPE,
+                   id.toString(),
+                   200,
+                   CdrInternalResult.SUCCESS,
+                   CdrBuilder.buildUpdateSubscriberSubscriptionTypeSection(id, oldSubscriptionType, newSubscriptionType));
             return saved;
         });
     }
@@ -284,21 +284,21 @@ public class SubscriberServiceClients {
     public Optional<Subscriber> updateCustomer(Long id, Long newCustomerId) {
         Customer newCustomer = customerRepository.findById(newCustomerId)
                 .orElseThrow(() -> {
-//                    cdrLogger.logCdr(CdrOperation.UPDATE_SUBSCRIBER_CUSTOMER,
-//                            id != null ? id.toString() : "UNKNOWN",
-//                            404,
-//                            CdrInternalResult.CUSTOMER_NOT_FOUND,
-//                            CdrBuilder.buildUpdateSubscriberCustomerSection(id, null, newCustomerId));
+                   cdrLogger.logCdr(CdrOperation.UPDATE_SUBSCRIBER_CUSTOMER,
+                           id != null ? id.toString() : "UNKNOWN",
+                           404,
+                           CdrInternalResult.CUSTOMER_NOT_FOUND,
+                           CdrBuilder.buildUpdateSubscriberCustomerSection(id, null, newCustomerId));
                     return new NotFoundException("Customer with ID " + newCustomerId + " not found");
                 });
 
         Optional<Subscriber> optional = subscriberRepository.findById(id);
         if (optional.isEmpty()) {
-//            cdrLogger.logCdr(CdrOperation.UPDATE_SUBSCRIBER_CUSTOMER,
-//                    id != null ? id.toString() : "UNKNOWN",
-//                    404,
-//                    CdrInternalResult.SUBSCRIBER_NOT_FOUND,
-//                    CdrBuilder.buildUpdateSubscriberCustomerSection(id, null, newCustomerId));
+           cdrLogger.logCdr(CdrOperation.UPDATE_SUBSCRIBER_CUSTOMER,
+                   id != null ? id.toString() : "UNKNOWN",
+                   404,
+                   CdrInternalResult.SUBSCRIBER_NOT_FOUND,
+                   CdrBuilder.buildUpdateSubscriberCustomerSection(id, null, newCustomerId));
             return Optional.empty();
         }
 
@@ -313,11 +313,11 @@ public class SubscriberServiceClients {
             kafkaProducerService.publishSubscriberCustomerUpdate(id, oldCustomerId, newCustomerId);
             log.info("Updated customer for subscriber ID {}: {} -> {}", id, oldCustomerId, newCustomerId);
 
-//            cdrLogger.logCdr(CdrOperation.UPDATE_SUBSCRIBER_CUSTOMER,
-//                    id.toString(),
-//                    200,
-//                    CdrInternalResult.SUCCESS,
-//                    CdrBuilder.buildUpdateSubscriberCustomerSection(id, oldCustomerId, newCustomerId));
+           cdrLogger.logCdr(CdrOperation.UPDATE_SUBSCRIBER_CUSTOMER,
+                   id.toString(),
+                   200,
+                   CdrInternalResult.SUCCESS,
+                   CdrBuilder.buildUpdateSubscriberCustomerSection(id, oldCustomerId, newCustomerId));
             return saved;
         });
     }
@@ -337,11 +337,11 @@ public class SubscriberServiceClients {
     public boolean deleteSubscriber(Long id) {
         Optional<Subscriber> optional = subscriberRepository.findById(id);
         if (optional.isEmpty()) {
-//            cdrLogger.logCdr(CdrOperation.DELETE_SUBSCRIBER,
-//                    id != null ? id.toString() : "UNKNOWN",
-//                    404,
-//                    CdrInternalResult.SUBSCRIBER_NOT_FOUND,
-//                    CdrBuilder.buildDeleteSubscriberSection(id, null, null));
+           cdrLogger.logCdr(CdrOperation.DELETE_SUBSCRIBER,
+                   id != null ? id.toString() : "UNKNOWN",
+                   404,
+                   CdrInternalResult.SUBSCRIBER_NOT_FOUND,
+                   CdrBuilder.buildDeleteSubscriberSection(id, null, null));
             return false;
         }
 
@@ -353,11 +353,11 @@ public class SubscriberServiceClients {
         kafkaProducerService.publishSubscriberDeleted(id);
         log.info("Deleted subscriber with ID: {}", id);
 
-//        cdrLogger.logCdr(CdrOperation.DELETE_SUBSCRIBER,
-//                id.toString(),
-//                204,
-//                CdrInternalResult.SUCCESS,
-//                CdrBuilder.buildDeleteSubscriberSection(id, toDelete.getMsisdn(), customerId));
+       cdrLogger.logCdr(CdrOperation.DELETE_SUBSCRIBER,
+               id.toString(),
+               204,
+               CdrInternalResult.SUCCESS,
+               CdrBuilder.buildDeleteSubscriberSection(id, toDelete.getMsisdn(), customerId));
         return true;
     }
 

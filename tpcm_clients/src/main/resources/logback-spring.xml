@@ -5,6 +5,18 @@
         <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
     </appender>
 
+    <appender name="cdrFile" class="ch.qos.logback.core.FileAppender">
+        <file>cdr/cdr.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="com.example.tpcm_clients.cdr.CdrLoggerImpl" level="INFO" additivity="false">
+        <appender-ref ref="cdrFile" />
+    </logger>
+
     <root level="INFO">
         <appender-ref ref="console"/>
     </root>

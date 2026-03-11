@@ -169,6 +169,7 @@ Try to respond in Romanian ONLY IF the user asked in Romanian.`;
 
                 if (analysis.subscriberId || analysis.msisdn) {
                     identifier = analysis.subscriberId || analysis.msisdn;
+
                 } else if (analysis.name) {
                     const nameSearchResult = await chatbotApiService.searchByName(analysis.name);
 
@@ -185,6 +186,7 @@ Try to respond in Romanian ONLY IF the user asked in Romanian.`;
                         foundCount: nameSearchResult.count,
                         msisdn: firstSubscriber.msisdn
                     };
+
                 } else {
                     throw new Error('Subscriber ID, MSISDN, or customer name required');
                 }
@@ -194,8 +196,23 @@ Try to respond in Romanian ONLY IF the user asked in Romanian.`;
 
                 if (analysis.customerId) {
                     identifier = analysis.customerId;
+
                 } else if (analysis.name) {
-                    identifier = analysis.name;
+                    const nameSearchResult = await chatbotApiService.searchByName(analysis.name);
+
+                    if (!nameSearchResult.found || nameSearchResult.subscribers.length === 0) {
+                        throw new Error(`No customer found for name: ${analysis.name}`);
+                    }
+
+                    const firstSubscriber = nameSearchResult.subscribers[0];
+                    identifier = firstSubscriber.customerId.toString();
+
+                    analysis._searchInfo = {
+                        searchedByName: true,
+                        customerName: firstSubscriber.customerName,
+                        foundCount: nameSearchResult.count
+                    };
+
                 } else {
                     throw new Error('Customer ID or name required');
                 }
@@ -221,7 +238,7 @@ Try to respond in Romanian ONLY IF the user asked in Romanian.`;
                 dataType: analysis.dataType,
                 operation,
                 identifier,
-                logLines: logLines,
+                logLines,
                 totalLines: logLines.length,
                 searchInfo: analysis._searchInfo
             };
