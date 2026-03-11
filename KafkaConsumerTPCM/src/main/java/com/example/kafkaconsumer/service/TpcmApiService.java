@@ -301,7 +301,7 @@ public class TpcmApiService {
     public void importCustomerFromClients(Long customerId) {
         try {
                 String clientsCustomerJson = tpcmClientsWebClient.get()
-            .uri("/api/clients/customers/{id}", customerId)
+                    .uri("/api/clients/customers/{id}", customerId)
                     .retrieve()
                     .bodyToMono(String.class)
                     .block();

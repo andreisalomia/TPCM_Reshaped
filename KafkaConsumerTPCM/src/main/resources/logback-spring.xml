@@ -10,7 +10,7 @@
     <appender name="KAFKA_CONSUMER_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/kafka-consumer.log</file>
         <encoder>
-            <pattern>%msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} - %msg%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>logs/kafka-consumer-%d{yyyy-MM-dd}.log</fileNamePattern>
@@ -18,7 +18,7 @@
         </rollingPolicy>
     </appender>
 
-    <logger name="com.example.kafkaconsumer" level="INFO" additivity="false">
+    <logger name="com.example.kafkaconsumer" level="INFO" additivity="true">
         <appender-ref ref="KAFKA_CONSUMER_FILE"/>
     </logger>
 

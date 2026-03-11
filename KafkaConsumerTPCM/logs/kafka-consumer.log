@@ -1,44 +1,10 @@
 Starting KafkaConsumerApplication v1.0 using Java 25.0.2 with PID 1 (/app/app.jar started by root in /app)
 The following 1 profile is active: "docker"
-Creating WebClient with baseUrl: http://tpcm-spring:8080
-Starting KafkaConsumerApplication v1.0 using Java 25.0.2 with PID 1 (/app/app.jar started by root in /app)
-The following 1 profile is active: "docker"
-Creating WebClient with baseUrl: http://tpcm-spring:8080
-Starting KafkaConsumerApplication v1.0 using Java 25.0.2 with PID 1 (/app/app.jar started by root in /app)
-The following 1 profile is active: "docker"
-Creating WebClient with baseUrl: http://tpcm-spring:8080
-Starting KafkaConsumerApplication v1.0 using Java 25.0.2 with PID 1 (/app/app.jar started by root in /app)
-The following 1 profile is active: "docker"
-Creating WebClient with baseUrl: http://tpcm-spring:8080
-Starting KafkaConsumerApplication v1.0 using Java 25.0.2 with PID 1 (/app/app.jar started by root in /app)
-The following 1 profile is active: "docker"
+Creating TPCM WebClient with baseUrl: http://tpcm-spring:8080
+Creating Clients WebClient with baseUrl: http://tpcm-clients:8081
+Started KafkaConsumerApplication in 10.381 seconds (process running for 11.771)
 Starting KafkaConsumerApplication v1.0 using Java 25.0.2 with PID 1 (/app/app.jar started by root in /app)
 The following 1 profile is active: "docker"
 Creating TPCM WebClient with baseUrl: http://tpcm-spring:8080
 Creating Clients WebClient with baseUrl: http://tpcm-clients:8081
-Started KafkaConsumerApplication in 7.191 seconds (process running for 8.596)
-Starting KafkaConsumerApplication v1.0 using Java 25.0.2 with PID 1 (/app/app.jar started by root in /app)
-The following 1 profile is active: "docker"
-Creating TPCM WebClient with baseUrl: http://tpcm-spring:8080
-Creating Clients WebClient with baseUrl: http://tpcm-clients:8081
-Started KafkaConsumerApplication in 10.869 seconds (process running for 11.685)
-Starting KafkaConsumerApplication v1.0 using Java 25.0.2 with PID 1 (/app/app.jar started by root in /app)
-The following 1 profile is active: "docker"
-Creating TPCM WebClient with baseUrl: http://tpcm-spring:8080
-Creating Clients WebClient with baseUrl: http://tpcm-clients:8081
-Started KafkaConsumerApplication in 8.914 seconds (process running for 9.777)
-Starting KafkaConsumerApplication v1.0 using Java 25.0.2 with PID 1 (/app/app.jar started by root in /app)
-The following 1 profile is active: "docker"
-Creating TPCM WebClient with baseUrl: http://tpcm-spring:8080
-Creating Clients WebClient with baseUrl: http://tpcm-clients:8081
-Started KafkaConsumerApplication in 7.538 seconds (process running for 8.782)
-Consumed message from topic customer-updates, of type updateCustomerEmail -> {"eventType":"UPDATE_EMAIL","customerID":1,"name":null,"type":null,"nrSubscribers":null,"billCycleDay":null,"email":"andreisalomia100@gmail.com","contactNumber":null,"address":null,"changedField":"email","oldValue":"andreisalomia100@gmail.com","newValue":"andreisalomia100@gmail.com","timestamp":"2026-03-09T16:19:45","source":"CLIENTS_SERVICE"}
-Found operation type com.example.kafkaconsumer.entity.UpdateCustomerEmail
-Processing UPDATE_EMAIL for customer ID: 1
-Customer 1 email updated in app DB
-Finished processing UPDATE_EMAIL for customer ID: 1
-Consumed message from topic customer-updates, of type updateCustomerEmail -> {"eventType":"UPDATE_EMAIL","customerID":21,"name":null,"type":null,"nrSubscribers":null,"billCycleDay":null,"email":"froggychair123@gmail.com","contactNumber":null,"address":null,"changedField":"email","oldValue":"froggychair123@gmail.com","newValue":"froggychair123@gmail.com","timestamp":"2026-03-09T16:19:58","source":"CLIENTS_SERVICE"}
-Found operation type com.example.kafkaconsumer.entity.UpdateCustomerEmail
-Processing UPDATE_EMAIL for customer ID: 21
-Customer 21 email updated in app DB
-Finished processing UPDATE_EMAIL for customer ID: 21
+Started KafkaConsumerApplication in 24.253 seconds (process running for 27.586)
