@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
+import java.time.LocalDate;
 
 
 @Entity
@@ -29,6 +30,12 @@ public class Subscriber {
     @Column(name = "SUBSCRIPTIONTYPE", nullable = false)
 //    @Pattern(regexp = "^(PREPAID|POSTPAID|HYBRID)$", message = "Subscription type must be either 'PREPAID', 'POSTPAID' or 'HYBRID'")
     private String subscriptionType;
+
+    @Column(name = "IMSI")
+    private String imsi;
+
+    @Column(name = "CONTRACTSTARTDATE")
+    private LocalDate contractStartDate;
 
     @ManyToOne
     @JoinColumn(name = "CUSTOMERID", nullable = false)

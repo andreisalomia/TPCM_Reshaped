@@ -76,6 +76,26 @@ public class SubscriberControllerClients {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PatchMapping("/{id}/imsi")
+    @Operation(summary = "Update subscriber IMSI")
+    public ResponseEntity<Subscriber> updateImsi(
+            @PathVariable Long id,
+            @RequestBody @Parameter(description = "New IMSI") String imsi) {
+        return subscriberService.updateImsi(id, imsi)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PatchMapping("/{id}/contract-start-date")
+    @Operation(summary = "Update subscriber contract start date")
+    public ResponseEntity<Subscriber> updateContractStartDate(
+            @PathVariable Long id,
+            @RequestBody @Parameter(description = "New contract start date, format YYYY-MM-DD") String contractStartDate) {
+        return subscriberService.updateContractStartDate(id, contractStartDate)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSubscriber(@PathVariable Long id) {
         return subscriberService.deleteSubscriber(id)

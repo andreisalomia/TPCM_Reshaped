@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDate;
 
 @Service
 @Slf4j
@@ -52,6 +53,12 @@ public class SubscriberServiceClients {
         }
     }
 
+    private void validateImsi(String imsi) {
+        if (imsi != null && !imsi.matches("^[0-9]{14,15}$")) {
+            throw new ValidationException("IMSI must have 14 or 15 digits");
+        }
+    }
+
     private void updateNrSubscribers(Long customerId) {
         if (customerId != null) {
             int count = subscriberRepository.countByCustomerCustomerID(customerId);
@@ -69,6 +76,7 @@ public class SubscriberServiceClients {
             validateMsisdn(s.getMsisdn());
             validateStatus(s.getStatus());
             validateSubscriptionType(s.getSubscriptionType());
+            validateImsi(s.getImsi());
 
             if (s.getCustomer() == null || s.getCustomer().getCustomerID() == null) {
                 throw new ValidationException("Customer reference must not be null");
@@ -148,6 +156,50 @@ public class SubscriberServiceClients {
                            s != null && s.getCustomer() != null ? s.getCustomer().getCustomerID() : null));
             throw ex;
         }
+    }
+
+    @Transactional
+    public Optional<Subscriber> updateImsi(Long id, String newImsi) {
+        final String cleanImsi = newImsi != null ? newImsi.replace("\"", "").trim() : null;
+        validateImsi(cleanImsi);
+
+        Optional<Subscriber> optional = subscriberRepository.findById(id);
+        if (optional.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return optional.map(subscriber -> {
+            subscriber.setImsi(cleanImsi);  // folosești cleanImsi, nu newImsi
+            Subscriber saved = subscriberRepository.save(subscriber);
+            log.info("Updated IMSI for subscriber ID {}", id);
+            return saved;
+        });
+    }
+
+    @Transactional
+    public Optional<Subscriber> updateContractStartDate(Long id, String newContractStartDate) {
+        final String cleanDate = newContractStartDate != null
+                ? newContractStartDate.replace("\"", "").trim()
+                : null;
+
+        LocalDate parsedDate;
+        try {
+            parsedDate = LocalDate.parse(cleanDate);
+        } catch (Exception ex) {
+            throw new ValidationException("Contract start date must use format YYYY-MM-DD");
+        }
+
+        Optional<Subscriber> optional = subscriberRepository.findById(id);
+        if (optional.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return optional.map(subscriber -> {
+            subscriber.setContractStartDate(parsedDate);  // parsedDate e effectively final
+            Subscriber saved = subscriberRepository.save(subscriber);
+            log.info("Updated contract start date for subscriber ID {}", id);
+            return saved;
+        });
     }
 
     @Transactional
