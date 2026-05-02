@@ -222,6 +222,8 @@ public class TransactionFlowService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Amount does not match the reserved amount: " + amount + " != " + transaction.getAmount());
         }
 
+
+
         Timestamp oneDayAgo = new Timestamp(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
         if (transaction.getCreatedDate().before(oneDayAgo)) {
             cdrLogger.logCdr(CdrOperation.COMMIT, transactionId.toString(), 400,
@@ -231,6 +233,16 @@ public class TransactionFlowService {
                     "Transaction is older than one day and cannot be committed.");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Transaction is older than one day and cannot be committed.");
+        }
+
+        if ("Y".equals(transaction.getPartialReservation()) && !amount.equals(transaction.getAmount())) {
+            Limit limit = entityManager.find(Limit.class, transaction.getSubscriber().getSubscriberID(), LockModeType.PESSIMISTIC_WRITE);
+    
+            double difference = transaction.getAmount() - amount;
+            limit.setConsumedAmount(limit.getConsumedAmount() - difference);
+            limitRepository.save(limit);
+    
+            transaction.setAmount(amount); // actualizeaza suma finala
         }
 
         transaction.setStatus("COMMITTED");

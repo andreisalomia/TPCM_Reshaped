@@ -1,0 +1,27 @@
+2026-04-29 13:34:12 - Starting KafkaConsumerApplication v1.0 using Java 25.0.2 with PID 1 (/app/app.jar started by root in /app)
+2026-04-29 13:34:12 - The following 1 profile is active: "docker"
+2026-04-29 13:34:22 - Creating TPCM WebClient with baseUrl: http://tpcm-spring:8080
+2026-04-29 13:34:24 - Creating Clients WebClient with baseUrl: http://tpcm-clients:8081
+2026-04-29 13:34:38 - Starting KafkaConsumerApplication v1.0 using Java 25.0.2 with PID 1 (/app/app.jar started by root in /app)
+2026-04-29 13:34:38 - The following 1 profile is active: "docker"
+2026-04-29 13:34:45 - Creating TPCM WebClient with baseUrl: http://tpcm-spring:8080
+2026-04-29 13:34:47 - Creating Clients WebClient with baseUrl: http://tpcm-clients:8081
+2026-04-29 13:35:05 - Starting KafkaConsumerApplication v1.0 using Java 25.0.2 with PID 1 (/app/app.jar started by root in /app)
+2026-04-29 13:35:05 - The following 1 profile is active: "docker"
+2026-04-29 13:35:16 - Creating TPCM WebClient with baseUrl: http://tpcm-spring:8080
+2026-04-29 13:35:18 - Creating Clients WebClient with baseUrl: http://tpcm-clients:8081
+2026-04-29 13:36:05 - Starting KafkaConsumerApplication v1.0 using Java 25.0.2 with PID 1 (/app/app.jar started by root in /app)
+2026-04-29 13:36:05 - The following 1 profile is active: "docker"
+2026-04-29 13:36:12 - Creating TPCM WebClient with baseUrl: http://tpcm-spring:8080
+2026-04-29 13:36:13 - Creating Clients WebClient with baseUrl: http://tpcm-clients:8081
+2026-04-29 13:36:17 - Started KafkaConsumerApplication in 15.362 seconds (process running for 17.033)
+2026-04-29 13:38:52 - Starting KafkaConsumerApplication v1.0 using Java 25.0.2 with PID 1 (/app/app.jar started by root in /app)
+2026-04-29 13:38:52 - The following 1 profile is active: "docker"
+2026-04-29 13:39:01 - Creating TPCM WebClient with baseUrl: http://tpcm-spring:8080
+2026-04-29 13:39:03 - Creating Clients WebClient with baseUrl: http://tpcm-clients:8081
+2026-04-29 13:39:08 - Started KafkaConsumerApplication in 19.463 seconds (process running for 22.668)
+2026-04-29 13:56:44 - Starting KafkaConsumerApplication v1.0 using Java 25.0.2 with PID 1 (/app/app.jar started by root in /app)
+2026-04-29 13:56:44 - The following 1 profile is active: "docker"
+2026-04-29 13:56:55 - Creating TPCM WebClient with baseUrl: http://tpcm-spring:8080
+2026-04-29 13:56:56 - Creating Clients WebClient with baseUrl: http://tpcm-clients:8081
+2026-04-29 13:57:02 - Started KafkaConsumerApplication in 22.643 seconds (process running for 25.55)
