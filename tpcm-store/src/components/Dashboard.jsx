@@ -6,6 +6,7 @@ import ReportingTab from './ReportingTab';
 import ChatbotAdmin from './ChatbotAdmin';
 import VoiceCallsTab from './VoiceCallsTab';
 import Navbar from './Navbar';
+import SmsTab from './SmsTab';
 
 function Dashboard({ user, onLogout }) {
     const [activeTab, setActiveTab] = useState(() => {
@@ -72,6 +73,21 @@ function Dashboard({ user, onLogout }) {
                         </button>
                         <button
                             type="button"
+                            className={`btn btn-lg px-4 py-3 ${activeTab === 'sms' ? 'active' : ''}`}
+                            style={{
+                                backgroundColor: activeTab === 'sms' ? '#ff7a00' : '#6c757d',
+                                border: 'none',
+                                color: activeTab === 'sms' ? '#000' : '#fff',
+                                fontWeight: '600',
+                                transition: 'all 0.3s ease',
+                            }}
+                            onClick={() => setActiveTab('sms')}
+                        >
+                            <i className="bi bi-chat-text-fill me-2"></i>
+                            Premium SMS
+                        </button>
+                        <button
+                            type="button"
                             className={`btn btn-lg px-4 py-3 ${activeTab === 'reporting' ? 'active' : ''}`}
                             style={{
                                 backgroundColor: activeTab === 'reporting' ? '#ff7a00' : '#6c757d',
@@ -109,6 +125,7 @@ function Dashboard({ user, onLogout }) {
                     {activeTab === 'apps' && <AppsSection />}
                     {activeTab === 'events' && <EventsSection />}
                     {activeTab === 'voice-calls' && <VoiceCallsTab user={user} />}
+                    {activeTab === 'sms' && <SmsTab user={user} />}
                     {activeTab === 'reporting' && (
                         <>
                             {console.log('Passing user to ReportingTab:', user)}

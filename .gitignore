@@ -1,2 +1,5 @@
 client.json
 .env
+*.zip
+kafka-consumer*.log
+kafka-consumer.log

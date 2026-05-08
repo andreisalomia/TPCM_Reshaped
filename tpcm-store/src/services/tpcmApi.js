@@ -14,14 +14,14 @@ const tpcmApi = axios.create({
 });
 
 export const transactionApi = {
-  requestTransaction: async (msisdn, amount, thirdPartyId = 21) => {
+  requestTransaction: async (msisdn, amount, thirdPartyId = 21, channel = 'APP') => {
     try {
       const response = await tpcmApi.post('/transactions/flow/request', {
         msisdn,
         amount,
         thirdPartyId,
         partialReservation: 'N',
-        channel: 'APP'
+        channel
       });
       return response.data;
     } catch (error) {
@@ -65,6 +65,5 @@ export const transactionApi = {
     }
   }
 };
-
 
 export default tpcmApi;
