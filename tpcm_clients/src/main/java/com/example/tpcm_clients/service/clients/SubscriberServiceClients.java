@@ -30,7 +30,7 @@ public class SubscriberServiceClients {
     private final SubscriberRepositoryClients subscriberRepository;
     private final CustomerRepositoryClients customerRepository;
     private final KafkaProducerService kafkaProducerService;
-   private final CdrLogger cdrLogger;
+    private final CdrLogger cdrLogger;
 
     private static final List<String> VALID_STATUSES = Arrays.asList("ACTIVE", "INACTIVE", "SUSPENDED");
     private static final List<String> VALID_SUBSCRIPTION_TYPES = Arrays.asList("PREPAID", "POSTPAID", "HYBRID");
@@ -169,7 +169,7 @@ public class SubscriberServiceClients {
         }
 
         return optional.map(subscriber -> {
-            subscriber.setImsi(cleanImsi);  // folosești cleanImsi, nu newImsi
+            subscriber.setImsi(cleanImsi);
             Subscriber saved = subscriberRepository.save(subscriber);
             log.info("Updated IMSI for subscriber ID {}", id);
             return saved;
@@ -195,7 +195,7 @@ public class SubscriberServiceClients {
         }
 
         return optional.map(subscriber -> {
-            subscriber.setContractStartDate(parsedDate);  // parsedDate e effectively final
+            subscriber.setContractStartDate(parsedDate);
             Subscriber saved = subscriberRepository.save(subscriber);
             log.info("Updated contract start date for subscriber ID {}", id);
             return saved;

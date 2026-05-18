@@ -4,7 +4,7 @@ IS
     CURSOR cursor_transactions IS
         SELECT transactionID, subscriberID
         FROM Transaction
-        WHERE status = 'UNCOMMITTED'
+        WHERE status = 'PENDING'
         AND createdDate < SYSTIMESTAMP - INTERVAL '24' HOUR;
 
     v_deleted_count NUMBER := 0;
@@ -16,7 +16,7 @@ BEGIN
             trans.transactionID,
             SYSTIMESTAMP,
             trans.subscriberID,
-            'Uncommitted transaction deleted after 24 hours'
+            'Pending transaction deleted after 24 hours'
         );
 
         DELETE FROM Transaction

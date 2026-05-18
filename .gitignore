@@ -3,3 +3,5 @@ client.json
 *.zip
 kafka-consumer*.log
 kafka-consumer.log
+extras/
+pseudocode.txt
