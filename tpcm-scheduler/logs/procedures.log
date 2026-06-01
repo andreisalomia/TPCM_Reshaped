@@ -1,2 +1,62 @@
-[2026-02-24T19:59:59.973768848] Starting deleteOldTransactions procedure
-[2026-02-24T20:00:00.055198736] deleteOldTransactions completed successfully
+[2026-05-31T20:00:00.060676642] Starting deleteOldTransactions procedure
+[2026-05-31T20:00:00.220648613] Error executing deleteOldTransactions
+org.springframework.dao.DataIntegrityViolationException: StatementCallback; SQL [DECLARE v_count NUMBER; BEGIN v_count := deleteOldTransactions(); END;]; ORA-01839: date not valid for month specified
+ORA-06512: at "TPCM_APP.DELETEOLDTRANSACTIONS", line 11
+ORA-06512: at "TPCM_APP.DELETEOLDTRANSACTIONS", line 11
+ORA-06512: at line 1
+
+https://docs.oracle.com/error-help/db/ora-01839/
+	at org.springframework.jdbc.support.SQLExceptionSubclassTranslator.doTranslate(SQLExceptionSubclassTranslator.java:100)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:107)
+	at org.springframework.jdbc.core.JdbcTemplate.translateException(JdbcTemplate.java:1556)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:408)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:567)
+	at com.example.tpcmscheduler.service.DatabaseScheduler.deleteOldTransactions(DatabaseScheduler.java:49)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.runInternal(ScheduledMethodRunnable.java:130)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.lambda$run$2(ScheduledMethodRunnable.java:124)
+	at io.micrometer.observation.Observation.observe(Observation.java:498)
+	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRunnable.java:124)
+	at org.springframework.scheduling.config.Task$OutcomeTrackingRunnable.run(Task.java:87)
+	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(DelegatingErrorHandlingRunnable.java:54)
+	at org.springframework.scheduling.concurrent.ReschedulingRunnable.run(ReschedulingRunnable.java:96)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:328)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:309)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+Caused by: java.sql.SQLDataException: ORA-01839: date not valid for month specified
+ORA-06512: at "TPCM_APP.DELETEOLDTRANSACTIONS", line 11
+ORA-06512: at "TPCM_APP.DELETEOLDTRANSACTIONS", line 11
+ORA-06512: at line 1
+
+https://docs.oracle.com/error-help/db/ora-01839/
+	at oracle.jdbc.driver.T4CTTIoer11.processError(T4CTTIoer11.java:715)
+	at oracle.jdbc.driver.T4CTTIoer11.processError(T4CTTIoer11.java:615)
+	at oracle.jdbc.driver.T4C8Oall.processError(T4C8Oall.java:1372)
+	at oracle.jdbc.driver.T4CTTIfun.receive(T4CTTIfun.java:969)
+	at oracle.jdbc.driver.T4CTTIfun.doRPC(T4CTTIfun.java:237)
+	at oracle.jdbc.driver.T4C8Oall.doOALL(T4C8Oall.java:524)
+	at oracle.jdbc.driver.T4CStatement.doOall8(T4CStatement.java:192)
+	at oracle.jdbc.driver.T4CStatement.executeForRows(T4CStatement.java:1401)
+	at oracle.jdbc.driver.OracleStatement.executeSQLStatement(OracleStatement.java:2009)
+	at oracle.jdbc.driver.OracleStatement.doExecuteWithTimeout(OracleStatement.java:1622)
+	at oracle.jdbc.driver.OracleStatement.executeUpdateInternal(OracleStatement.java:2603)
+	at oracle.jdbc.driver.OracleStatement.executeLargeUpdate(OracleStatement.java:2562)
+	at oracle.jdbc.driver.OracleStatement.executeUpdate(OracleStatement.java:2547)
+	at oracle.jdbc.driver.OracleStatementWrapper.executeUpdate(OracleStatementWrapper.java:325)
+	at com.zaxxer.hikari.pool.ProxyStatement.executeUpdate(ProxyStatement.java:120)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.executeUpdate(HikariProxyStatement.java)
+	at org.springframework.jdbc.core.JdbcTemplate$1UpdateStatementCallback.doInStatement(JdbcTemplate.java:555)
+	at org.springframework.jdbc.core.JdbcTemplate$1UpdateStatementCallback.doInStatement(JdbcTemplate.java:552)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:393)
+	... 17 common frames omitted
+Caused by: oracle.jdbc.OracleDatabaseException: ORA-01839: date not valid for month specified
+ORA-06512: at "TPCM_APP.DELETEOLDTRANSACTIONS", line 11
+ORA-06512: at "TPCM_APP.DELETEOLDTRANSACTIONS", line 11
+ORA-06512: at line 1
+
+	at oracle.jdbc.driver.T4CTTIoer11.processError(T4CTTIoer11.java:723)
+	... 35 common frames omitted

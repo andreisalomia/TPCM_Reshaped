@@ -17,7 +17,7 @@ function Navbar({ user, onLogout }) {
                     />
                     <span className="navbar-brand mb-0 h1" style={{ color: '#ff7a00', fontWeight: '600' }}>
                         <i className="bi bi-phone me-2"></i>
-                        TPCM Store
+                        Store
                     </span>
                 </div>
 

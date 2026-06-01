@@ -224,7 +224,7 @@ const ReportingTab = ({ user }) => {
                         <i className="bi bi-graph-up me-2"></i>
                         Transactions for {activeMsisdn}
                     </h2>
-                    <p className="text-muted">TPCM Store & SMS Transactions and Premium Voice Calls</p>
+                    <p className="text-muted">Store & SMS Transactions and Premium Voice Calls</p>
                 </div>
             </div>
 
@@ -374,7 +374,7 @@ const ReportingTab = ({ user }) => {
                                         onClick={() => handleSubTabChange('app-transactions')}
                                     >
                                         <i className="bi bi-phone me-2"></i>
-                                        TPCM Store & SMS Transactions
+                                        Store & SMS Transactions
                                     </button>
                                 </li>
                                 <li className="nav-item">

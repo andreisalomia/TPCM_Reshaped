@@ -32,7 +32,7 @@ function LoginPage() {
                             <div className="text-center mb-4" style={{ paddingTop: '40px' }}>
                                 <h2 className="card-title" style={{ color: '#ff7a00' }}>
                                     <i className="bi bi-phone me-2"></i>
-                                    TPCM Store
+                                    Store
                                 </h2>
                                 <p className="text-secondary">Sign in to continue</p>
                             </div>

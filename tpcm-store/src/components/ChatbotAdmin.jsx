@@ -25,7 +25,9 @@ function ChatbotAdmin() {
 
     const flow = {
         start: {
-            message: `Hello! I'm the TPCM Assistant, a helpful chatbot designed to help customer support operators with their inquiries. How can I help you today?`,
+            message: `Hello! I'm the Customer Support Assistant, a helpful 
+                        chatbot designed to help customer support operators with their inquiries.
+                        How can I help you today?`,
             path: 'loop',
         },
         loop: {
@@ -35,6 +37,7 @@ function ChatbotAdmin() {
             path: 'loop',
         },
     };
+
 
     const settings = {
         general: {
