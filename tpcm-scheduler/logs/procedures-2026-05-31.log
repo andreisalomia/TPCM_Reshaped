@@ -1,12 +1,12 @@
-[2026-06-01T19:59:58.312370174] Starting deleteOldTransactions procedure
-[2026-06-01T19:59:58.846462938] Error executing deleteOldTransactions
-org.springframework.dao.DataIntegrityViolationException: StatementCallback; SQL [DECLARE v_count NUMBER; BEGIN v_count := deleteOldTransactions(); END;]; ORA-02292: integrity constraint (TPCM_APP.FK_LOG_TRANSACTION) violated - child record found
-ORA-06512: at "TPCM_APP.DELETEOLDTRANSACTIONS", line 22
-ORA-06512: at "TPCM_APP.DELETEOLDTRANSACTIONS", line 22
+[2026-05-31T20:00:00.060676642] Starting deleteOldTransactions procedure
+[2026-05-31T20:00:00.220648613] Error executing deleteOldTransactions
+org.springframework.dao.DataIntegrityViolationException: StatementCallback; SQL [DECLARE v_count NUMBER; BEGIN v_count := deleteOldTransactions(); END;]; ORA-01839: date not valid for month specified
+ORA-06512: at "TPCM_APP.DELETEOLDTRANSACTIONS", line 11
+ORA-06512: at "TPCM_APP.DELETEOLDTRANSACTIONS", line 11
 ORA-06512: at line 1
 
-https://docs.oracle.com/error-help/db/ora-02292/
-	at org.springframework.jdbc.support.SQLExceptionSubclassTranslator.doTranslate(SQLExceptionSubclassTranslator.java:106)
+https://docs.oracle.com/error-help/db/ora-01839/
+	at org.springframework.jdbc.support.SQLExceptionSubclassTranslator.doTranslate(SQLExceptionSubclassTranslator.java:100)
 	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:107)
 	at org.springframework.jdbc.core.JdbcTemplate.translateException(JdbcTemplate.java:1556)
 	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:408)
@@ -27,12 +27,12 @@ https://docs.oracle.com/error-help/db/ora-02292/
 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
 	at java.base/java.lang.Thread.run(Thread.java:1474)
-Caused by: java.sql.SQLIntegrityConstraintViolationException: ORA-02292: integrity constraint (TPCM_APP.FK_LOG_TRANSACTION) violated - child record found
-ORA-06512: at "TPCM_APP.DELETEOLDTRANSACTIONS", line 22
-ORA-06512: at "TPCM_APP.DELETEOLDTRANSACTIONS", line 22
+Caused by: java.sql.SQLDataException: ORA-01839: date not valid for month specified
+ORA-06512: at "TPCM_APP.DELETEOLDTRANSACTIONS", line 11
+ORA-06512: at "TPCM_APP.DELETEOLDTRANSACTIONS", line 11
 ORA-06512: at line 1
 
-https://docs.oracle.com/error-help/db/ora-02292/
+https://docs.oracle.com/error-help/db/ora-01839/
 	at oracle.jdbc.driver.T4CTTIoer11.processError(T4CTTIoer11.java:715)
 	at oracle.jdbc.driver.T4CTTIoer11.processError(T4CTTIoer11.java:615)
 	at oracle.jdbc.driver.T4C8Oall.processError(T4C8Oall.java:1372)
@@ -53,9 +53,9 @@ https://docs.oracle.com/error-help/db/ora-02292/
 	at org.springframework.jdbc.core.JdbcTemplate$1UpdateStatementCallback.doInStatement(JdbcTemplate.java:552)
 	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:393)
 	... 17 common frames omitted
-Caused by: oracle.jdbc.OracleDatabaseException: ORA-02292: integrity constraint (TPCM_APP.FK_LOG_TRANSACTION) violated - child record found
-ORA-06512: at "TPCM_APP.DELETEOLDTRANSACTIONS", line 22
-ORA-06512: at "TPCM_APP.DELETEOLDTRANSACTIONS", line 22
+Caused by: oracle.jdbc.OracleDatabaseException: ORA-01839: date not valid for month specified
+ORA-06512: at "TPCM_APP.DELETEOLDTRANSACTIONS", line 11
+ORA-06512: at "TPCM_APP.DELETEOLDTRANSACTIONS", line 11
 ORA-06512: at line 1
 
 	at oracle.jdbc.driver.T4CTTIoer11.processError(T4CTTIoer11.java:723)

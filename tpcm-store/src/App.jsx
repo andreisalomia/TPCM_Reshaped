@@ -40,6 +40,7 @@ function App() {
         return () => clearInterval(interval);
     }, [user]);
 
+    
     const handleLogout = () => {
         setUser(null);
         jwtUtils.removeToken();

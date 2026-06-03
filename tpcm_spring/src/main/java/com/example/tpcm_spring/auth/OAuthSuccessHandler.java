@@ -28,16 +28,16 @@ public class OAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         log.info("OAuth Success Handler Called");
 
         try {
-    OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+                OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
 
 
-    String providerUserId = oAuth2User.getAttribute("sub");
-    String email = oAuth2User.getAttribute("email");
-    String displayName = oAuth2User.getAttribute("name");
+                String providerUserId = oAuth2User.getAttribute("sub");
+                String email = oAuth2User.getAttribute("email");
+                String displayName = oAuth2User.getAttribute("name");
 
-    log.info("OAuth User Details - Email: {}, Name: {}, ProviderUserId: {}", email, displayName, providerUserId);
+                log.info("OAuth User Details - Email: {}, Name: {}, ProviderUserId: {}", email, displayName, providerUserId);
 
-    Optional<SubscriberAuth> existing = oAuthService.findByProviderAndUserId("GOOGLE", providerUserId);
+                Optional<SubscriberAuth> existing = oAuthService.findByProviderAndUserId("GOOGLE", providerUserId);
 
 
             if (existing.isPresent()) {

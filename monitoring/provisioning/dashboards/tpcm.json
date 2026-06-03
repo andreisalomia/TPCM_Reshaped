@@ -334,7 +334,7 @@
             "uid": "fflfyu0456gw0d"
           },
           "editorMode": "code",
-          "expr": "tpcm_transactions_rejected_total",
+          "expr": "sum(tpcm_transactions_rejected_total)",
           "instant": false,
           "legendFormat": "Rejected",
           "range": true,
@@ -352,7 +352,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "palette-classic-by-name"
           },
           "custom": {
             "axisBorderShow": false,
@@ -382,10 +382,6 @@
               {
                 "color": "green",
                 "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
@@ -447,13 +443,13 @@
     "list": []
   },
   "time": {
-    "from": "2026-05-08T12:54:37.350Z",
-    "to": "2026-05-08T13:09:47.411Z"
+    "from": "now-6h",
+    "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "TPCM Monitoring",
   "uid": "adf7nqj",
-  "version": 6,
+  "version": 8,
   "weekStart": ""
 }
