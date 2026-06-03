@@ -26,7 +26,7 @@ services:
       test: ["CMD-SHELL", "echo 'SELECT 1 FROM DUAL;' | sqlplus -s system/${ORACLE_PWD}@//localhost:1521/FREEPDB1 | grep -q '1'"]
       interval: 10s
       timeout: 5s
-      retries: 30
+      retries: 10
       start_period: 180s
 
   kafka:
