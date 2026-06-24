@@ -6,7 +6,7 @@ function Navbar({ user, onLogout }) {
             <div className="container d-flex justify-content-between align-items-center">
                 <div className="d-flex align-items-center">
                     <img
-                        src="/orange_logo.jpg"
+                        src="/store_icon.png"
                         alt="Orange Logo"
                         style={{
                             width: '40px',

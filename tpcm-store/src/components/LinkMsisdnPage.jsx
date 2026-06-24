@@ -70,7 +70,7 @@ function LinkMsisdnPage() {
                 <div className="col-md-4 offset-md-4">
                     <div className="card shadow-lg bg-black text-light border-0 position-relative">
                         <img
-                            src="/orange_logo.jpg"
+                            src="/store_icon.png"
                             alt="Orange Logo"
                             className="position-absolute"
                             style={{

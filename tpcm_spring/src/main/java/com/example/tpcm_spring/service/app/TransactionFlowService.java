@@ -6,8 +6,11 @@ import com.example.tpcm_spring.models.app.*;
 import com.example.tpcm_spring.repository.app.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -34,8 +37,18 @@ public class TransactionFlowService {
 
     private final MeterRegistry meterRegistry;
 
+    @Autowired
+    @Lazy
+    private TransactionFlowService self;
+
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public Transaction saveTransaction(Transaction transaction, String status) {
+       transaction.setStatus(status);
+       return transactionRepository.save(transaction);
+    }
 
     @Transactional
     public Transaction processPendingTransaction(String msisdn, Double amount, Long thirdPartyId,
@@ -92,7 +105,7 @@ public class TransactionFlowService {
         transaction.setPartialReservation("Y".equalsIgnoreCase(partialReservation) ? "Y" : "N");
         transaction.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
-        transaction = transactionRepository.save(transaction);
+        transaction = self.saveTransaction(transaction, "PENDING");
 
         // Metric
         Counter.builder("tpcm_transactions").tag("channel", channel != null ? channel : "UNKNOWN").register(meterRegistry).increment();
@@ -101,8 +114,8 @@ public class TransactionFlowService {
                 "Transaction initialized and pending.");
 
         if (amount > limit.getMaxAmountTransaction()) {
-            transaction.setStatus("FAILED");
-            transactionRepository.save(transaction);
+            transaction = self.saveTransaction(transaction, "FAILED");
+            entityManager.detach(transaction);
 
             double remainingLimit = limit.getMaxAmountCycle() - limit.getConsumedAmount();
 
@@ -128,8 +141,8 @@ public class TransactionFlowService {
 
         double availableBalance = limit.getMaxAmountCycle() - limit.getConsumedAmount();
         if (amount > availableBalance) {
-            transaction.setStatus("FAILED");
-            transactionRepository.save(transaction);
+            transaction = self.saveTransaction(transaction, "FAILED");
+            entityManager.detach(transaction);
 
             double remainingBalance = limit.getMaxAmountCycle() - limit.getConsumedAmount();
 
@@ -222,8 +235,6 @@ public class TransactionFlowService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Amount does not match the reserved amount: " + amount + " != " + transaction.getAmount());
         }
 
-
-
         Timestamp oneDayAgo = new Timestamp(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
         if (transaction.getCreatedDate().before(oneDayAgo)) {
             cdrLogger.logCdr(CdrOperation.COMMIT, transactionId.toString(), 400,
@@ -237,12 +248,12 @@ public class TransactionFlowService {
 
         if ("Y".equals(transaction.getPartialReservation()) && !amount.equals(transaction.getAmount())) {
             Limit limit = entityManager.find(Limit.class, transaction.getSubscriber().getSubscriberID(), LockModeType.PESSIMISTIC_WRITE);
-    
+
             double difference = transaction.getAmount() - amount;
             limit.setConsumedAmount(limit.getConsumedAmount() - difference);
             limitRepository.save(limit);
-    
-            transaction.setAmount(amount); // actualizeaza suma finala
+
+            transaction.setAmount(amount);
         }
 
         transaction.setStatus("COMMITTED");

@@ -329,7 +329,7 @@ const ReportingTab = ({ user }) => {
                                             <option value="">All</option>
                                             <option value="PENDING">PENDING</option>
                                             <option value="COMMITTED">COMMITTED</option>
-                                            <option value="COMPLETED">FAILED</option>
+                                            <option value="FAILED">FAILED</option>
                                         </select>
                                     </div>
                                 )}
